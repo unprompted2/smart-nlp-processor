@@ -116,4 +116,85 @@ class NaturalLanguageUnderstanding(object):
             with slot_graph.as_default():
                 try:
                     # restoring pretrained graph
-     
+                    saver_slot = tf.train.import_meta_graph(self.base_path + '/slots/slots_2.ckpt.meta', clear_devices=True)
+                    # restoring meta data (contains variable data such as weights and biases)
+                    saver_slot.restore(self.slot_sess, self.base_path + '/slots/slots_2.ckpt')
+                    # assigning input tensor variable (1/2)
+                    self.x_slot = slot_graph.get_tensor_by_name("input_placeholder:0")
+                    # assigning input tensor variable (2/2)
+                    self.sequence_length_slot = slot_graph.get_tensor_by_name("inputs_length:0")
+                    # assigning output tensor variable
+                    self.y_slot = slot_graph.get_tensor_by_name("Reshape:0")
+                    print('Done')
+                except IOError:
+                    print('\n\nArguments/slots classifier missing!, are you sure you have downloaded them using the classifier setup?(mbot_nlu_classifier/common/setup/download_classifiers.sh)\n\n')
+        else:
+            print('All the tf variables for slot session has been already initiated, moving on to processing input...')
+
+        return
+
+
+    def close_session(self):
+        '''
+        method to close both tf sessions (which will release the tf variables from memory) once NLU is no longer needed.
+        (use it wisely ;))
+        '''
+        # sanity check
+        # closing intent and slot sessions
+        if not self.intent_sess._closed: self.intent_sess.close()
+        if not self.slot_sess._closed: self.slot_sess.close()
+        print('\033[1;31mBoth tensorflow sessions (intent and slots) are now closed\033[0;37m')
+
+
+    def find_intention(self, phrase_as_index_vector, vector_size=15):
+        '''
+        method that recognizes the intention of the given phrase (phrase_as_index_vector)
+        using a trained Neural Network with tensor flow
+        for now only commands are allowed, no "pure" knowledge is supported
+        input:
+            phrase_as_index_vector - a single command, e.g. "go to the kitchen"
+                but in index vector form,
+                e.g. phrase_as_index_vector = [[243, 5, 1, 4907, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+            vector_size - the size of the input vector to the NN (15)
+            NOTE: muliple phrases are not allowed e.g. "go to the kitchen and grasp the coke"
+            first step in the NLU pipeline is to divide a sentence into phrases (using syntaxnet)
+            and this method receives the individual phrases
+        output:
+            intention - string with the recognized intention
+        '''
+
+        # calculating the output of intent classifier [a list of 'probabilities' corresponding to each intent]
+        with self.intent_sess.as_default():
+            y_pred = self.y_intent.eval(feed_dict={self.x_intent: phrase_as_index_vector, self.sequence_length_intent: vector_size})
+
+        # print debug information if debug is set to true
+        if self.debug:
+            print('prediction from the intent classifier = {}'.format(y_pred)) # probabilites (kind of, not exactly probabilites) for each of the actions
+
+        # finding probability of intent class with maximum probability
+        b = np.max(y_pred, 1)
+
+        # init intention to 'other'
+        intention = 'other'
+
+        if b > 6.5: # threshold for the classification to be consider succesful
+
+            y_pred = np.argmax(y_pred, 1).tolist()
+
+            if self.debug:
+                print('probability corresponding to predicted intent = {}'.format(y_pred)) # probabilites (kind of, not exactly probabilites) for each of the actions
+
+            try:
+                intention = available_intents[y_pred[0]]
+            except:
+                print('Error: NN classified your vector, but to a unknown class.. check your code + your training!')
+                print('predicted class : ' + str(y_pred[0]))
+
+        if self.debug:
+            print('predicted intention = {}'.format(intention))
+
+        # return value (store in member variable)
+        self.intention_found = intention
+
+
+    def find_slots(self, word_index_vector, vector_size, ph
