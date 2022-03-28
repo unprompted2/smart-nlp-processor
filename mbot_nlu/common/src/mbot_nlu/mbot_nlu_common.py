@@ -197,4 +197,101 @@ class NaturalLanguageUnderstanding(object):
         self.intention_found = intention
 
 
-    def find_slots(self, word_index_vector, vector_size, ph
+    def find_slots(self, word_index_vector, vector_size, phrase):
+        '''
+        to identify the slots of an intention
+        '''
+
+        # calculating the output of slot classifier
+        with self.slot_sess.as_default():
+            y_slot = self.y_slot.eval(feed_dict={self.x_slot: word_index_vector, self.sequence_length_slot: vector_size})
+
+        # finding probability of slot class with maximum probability
+        y_pred = np.argmax(y_slot, 1).tolist()
+
+        slots = []
+        for i in range(len(phrase)):
+            pred = y_pred[i]
+
+            # TODO define this somewhere else
+            if pred == 0:
+                s_type = 'object'
+            elif pred == 2:
+                s_type = 'source'
+            elif pred == 4:
+                s_type = 'destination'
+            elif pred == 6:
+                s_type = 'person'
+            elif pred == 7:
+                s_type = 'sentence'
+            else:
+                continue
+
+            s_data = phrase[i]
+            # look for same type but Inside, for instance, many Iobject after Bobject
+            if s_type != 'person':
+                corresponding_inside = pred+1 # hard assumption, the Inside correspondence must be right after the Begin in the slot y_slot definition
+
+                for j in range(i+1, len(phrase)):
+                    if y_pred[j] != corresponding_inside:
+                        break
+                    s_data += ' ' + phrase[j]
+
+            slots.append( (s_type, s_data) ) # tuple
+
+        if self.debug:
+            for slot in slots:
+                print('predicted slots = {}'.format(slot)) # slot or agument !!
+
+        # return value (store in member variable)
+        self.slot_found = slots
+
+
+    def filter_phrase(self, phrase):
+        '''
+        1. convert phrase to lowercase
+        2. remove odd characters from words, e.g. , ? .
+        input : phrase - a string, e.g. 'go to the kitchen'
+        '''
+        # convert phrase into lowercase
+        filtered_phrase = phrase.lower()
+        # remove unwanted characters from phrase
+        filtered_phrase = filtered_phrase.strip('\n')
+        # removing unwanted characters
+        for symbol in ",.!?;":
+           filtered_phrase = filtered_phrase.replace(symbol,'')
+
+        return filtered_phrase
+
+    def process_single_phrase(self, phrase, vector_size=15):
+        # phrase filtering, remove odd chars from phrase
+        filtered_phrase = self.filter_phrase(phrase)
+
+        # convert string into list separating using ' ' (spaces)
+        filtered_phrase = filtered_phrase.rsplit()
+
+        # init empty list to be filled inside for loop
+        word_index_vector = []
+
+        # warn the user if more than 15 words are used (per filtered_phrase)
+        max_phrase_length = 15
+        if len(filtered_phrase) >= vector_size:
+            print('\033[1;33mWARNING: phrase cant be longer than '+ str(max_phrase_length) +' words\033[0;37m')
+            print('\033[1;33mWill only consider first ' + str(vector_size) + ' words\033[0;37m\n')
+
+        # generate word_index_vector of length vector_size (15), contains the indexes obtained from wikipedia dictionary
+        # for each of the words in the phrase + a bunch of zeros, as many required to reach vector_size (15) elements
+        # e.g. word_index_vector = [[243, 5, 1, 4907, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        # the above example is for : "go to the kitchen"
+        for i in range(0, vector_size):
+            if i < len(filtered_phrase):
+                # fill with wikipedia index
+                try:
+                    word_index_vector.append(self.dictionary[filtered_phrase[i]]) # filtered_phrase[i] is a word
+                except:
+                    print('\033[1;33mWARNING: word '+ filtered_phrase[i] + \
+                      ' was not found on wikipedia most common words dataset, will be replaced with null word vector\033[0;37m')
+                    try: word_index_vector.append(self.dictionary['zerowordvec'])
+                    except: word_index_vector.append(0)
+                    pass
+ 
