@@ -294,4 +294,83 @@ class NaturalLanguageUnderstanding(object):
                     try: word_index_vector.append(self.dictionary['zerowordvec'])
                     except: word_index_vector.append(0)
                     pass
- 
+            else:
+                # fill with null wordvec index
+                try: word_index_vector.append(self.dictionary['zerowordvec'])
+                except: word_index_vector.append(0)
+
+        # ensure that word_index_vector is of length vector_size (15)
+        assert len(word_index_vector) == vector_size
+
+        # start intention class method in separate threads
+        intention_detector_thread = threading.Thread(target = self.find_intention, args= [[word_index_vector], [vector_size]])
+        slot_detector_thread = threading.Thread(target = self.find_slots, args= [[word_index_vector], [vector_size], filtered_phrase])
+        intention_detector_thread.start()
+        slot_detector_thread.start()
+
+        # wait until threads are finished
+        while intention_detector_thread.isAlive() or slot_detector_thread.isAlive():
+            time.sleep(0.001)
+
+        # return results obtained from the threads
+        return self.intention_found, self.slot_found
+
+
+    def process_sentence(self, sentence, vector_size=15):
+        '''
+        1. process text to recogn
+        Divide sentence into phrases
+        2. convert to lowercase
+        3. match word with wikipedia dictionary to get id (dictionary)
+        4. ? TODO
+        '''
+        # to store return values, intention and slots e.g. recognized_intention = [['go','kitchen'],['grasp','bottle']]
+        recognized_intention = []
+
+        # iterate over the sentence to extract 1 intention per phrase
+        for j, phrase in enumerate(sentence):
+            if self.debug:
+                # print the phrase which is currently being analyzed
+                print("---")
+                print(str(j) + ': ' + phrase)
+
+            # process this phrase
+            intention, slot = self.process_single_phrase(phrase, vector_size=15)
+
+            # if intention is known then store to return values
+            if intention != 'other':
+                # for each filtered_phrase append the intention (action) and slot (args)
+                recognized_intention.append([intention, slot])
+            else:
+                # inform the user that the detected intention is not known
+                print('\033[1;33mWARNING : Detected intention not known!\033[0;37m')
+
+            # NOTE: will continue looping over sentence and will process next phrase!
+
+        return recognized_intention
+
+
+if __name__ == '__main__':
+    # example of how to use this class
+    import rospkg
+    import rospy
+    rospack = rospkg.RosPack()
+    classifier_path = rospack.get_path('mbot_nlu_classifiers') + \
+        '/common/classifiers/' + rospy.get_param('~nlu_classifier', 'mithun_gpsr_robocup')
+    wikipedia_vectors_path = rospack.get_path('mbot_nlu_training') + \
+        '/common/resources/wikipedia_vectors'
+
+    # instantiation
+    nlu = NaturalLanguageUnderstanding(classifier_path=classifier_path, wikipedia_vectors_path=wikipedia_vectors_path)
+
+    # initiating nlu session
+    nlu.initialize_session()
+
+    # examples
+    print(nlu.process_sentence(['go to the kitchen']))
+    print("----")
+    print(nlu.process_sentence(['pick the bottle']))
+    print("----")
+    print(nlu.process_sentence(['go to the kitchen', 'pick the bottle']))
+    print("----")
+    print(nlu.process_sentence(['go to the kitchen', 'pick the bottle from the table']))
