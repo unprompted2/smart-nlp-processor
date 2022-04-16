@@ -108,4 +108,91 @@ class MbotNluTest(unittest.TestCase):
         # count wrong tests if either the intent or one of the slots are wrong
         wrong_tests = 0
         correct_untill_now = True
-        def count_
+        def count_wrong_test(sentence_test_status, wrong_tests):
+            if not sentence_test_status:
+                wrong_tests += 1
+                return False, wrong_tests
+            else:
+                return True, wrong_tests
+
+        for i, sentence in enumerate(sentences):
+
+            # Check if NLU has an output if not continue to the next sentence
+            self.result = None
+            self.result = self.nlu.process_sentence(sentence)
+
+            # export raw result to text file (for manual inspection)
+            raw_result_dump.write(str(sentence) + '===' + str(self.result) + '\n')
+
+            # continue to next sentences if result is None or empty list
+            result_length = len(self.result)
+            if self.result is None or result_length==0:
+                print('nlu is not able to classify the sentence = {}'.format(sentence))
+                print('skipping to next sentence')
+                correct_untill_now, wrong_tests = count_wrong_test(False, wrong_tests)
+                continue
+
+            # wait until result is received.
+            while type(self.result)!=list:
+                time.sleep(0.01)
+
+            # Check if the output list has atleast one item
+            if result_length<1:
+                print('nlu is able to classify only intent or only one slot for the sentence = {}'.format(sentence))
+                print('result = {}'.format(self.result))
+                print('skipping to next sentence')
+                correct_untill_now, wrong_tests = count_wrong_test(False, wrong_tests)
+                continue
+
+            # Assigning expected intent and slots
+            exp_intent = expected_output[i][0][0]
+            exp_slots = expected_output[i][1]
+
+            # Testing intent
+            if self.test_choice=='intent' or self.test_choice=='both':
+                with self.subTest(Sentence_and_Intent = sentence[0].rstrip() + '--' + str(exp_intent)):
+                    # conditions for the test to be considered as passed
+                    # If there is no intent, there is IndexError
+                    self.assertEqual(self.result[0][0], exp_intent)
+
+                    # count failures
+                    try:
+                        if self.result[0][0]!=exp_intent:
+                            correct_untill_now, wrong_tests = count_wrong_test(False, wrong_tests)
+                    except IndexError:
+                        correct_untill_now, wrong_tests = count_wrong_test(False, wrong_tests)
+
+            # Testing slots
+            if self.test_choice=='slot'or self.test_choice=='both':
+                for slot_num, slot in enumerate(exp_slots):
+                    # conditions for the test to be considered as passed for each slot
+                    # If there is absence of specific slot, there is an IndexError
+                    with self.subTest(Sentence_and_Slot = sentence[0].rstrip() + '--' + str(slot)):
+                        self.assertEqual(self.result[0][1][slot_num], slot)
+
+                    # count failures
+                    try:
+                        if self.result[0][1][slot_num]!=slot and correct_untill_now:
+                            correct_untill_now, wrong_tests = count_wrong_test(False, wrong_tests)
+                    except IndexError:
+                        correct_untill_now, wrong_tests = count_wrong_test(False, wrong_tests)
+
+            bar.update(i)
+
+        bar.finish()
+
+        # Accuracy
+        Accuracy = (1-(wrong_tests/sentences_length))*100
+
+        # print additional information
+        print('\033[1;32m==========================\033[0;37m')
+        print('\033[1;32mTEST COMPLETE\033[0;37m')
+        print('\033[1;32m--------------------------\033[0;37m')
+        print('\033[1;32mTotal number of tests and failures = {}, {} \nsee the log_file.txt for detailed report\033[0;37m'.format(sentences_length, wrong_tests))
+        print('\033[1;32m--------------------------\033[0;37m')
+        print('\033[1;32mAccuracy = {} \n\033[0;37m'.format(Accuracy))
+        print('\033[1;32m--------------------------\033[0;37m')
+
+
+if __name__ == '__main__':
+   
