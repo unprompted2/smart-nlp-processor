@@ -195,4 +195,12 @@ class MbotNluTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-   
+    # env variables for tf and cuda
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+
+    # test and log results
+    log_file = 'log_file.txt'
+    f = open(log_file, "w")
+    runner = unittest.TextTestRunner(f)
+    unittest.main(testRunner=runner)
