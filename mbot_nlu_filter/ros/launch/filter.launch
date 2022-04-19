@@ -40,4 +40,6 @@
         <remap from="~nlu_input_topic" to="$(arg nlu_input_topic)"/>
         <remap from="~nlu_output_topic" to="$(arg nlu_output_topic)"/>
         <remap from="~full_response_topic" to="$(arg full_response_topic)"/>
-        <remap from="~person_names_topic" to="$(arg person_names_
+        <remap from="~person_names_topic" to="$(arg person_names_topic)"/>
+    </node>
+</launch>
