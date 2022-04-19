@@ -113,4 +113,43 @@ tell me how many pasta there are on the cutlery drawer
 # go (1)
 enter the dining room
 # take (11)
-hand
+hand the pasta to me
+hand over the pasta to me
+hand the pasta to peyton at the fireplace
+hand over the pasta to peyton at the fireplace
+retrieve the pasta from the fireplace
+place pasta on the cutlery drawer
+put pasta on the cutlery drawer
+set the pasta on the cutlery drawer
+set pasta on the cutlery drawer
+leave the pasta on the cutlery drawer
+leave pasta on the cutlery drawer
+# find (13)
+pinpoint the pasta
+spot the pasta
+pinpoint the pasta in the bathtub
+spot the pasta in the bathtub
+pinpoint peyton
+spot peyton
+pinpoint peyton in the bathtub
+spot peyton in the bathtub
+find peyton at the fireplace
+look for peyton at the fireplace
+locate peyton at the fireplace
+pinpoint peyton at the fireplace
+spot peyton at the fireplace
+# guide (7)
+accompany peyton
+accompany peyton to the fireplace
+conduct peyton to the fireplace
+escort peyton to the fireplace
+guide peyton to the fireplace
+lead peyton to the fireplace
+take peyton to the fireplace
+# follow (5)
+come after peyton
+go after peyton
+come behind peyton
+go behind peyton
+follow peyton
+#
