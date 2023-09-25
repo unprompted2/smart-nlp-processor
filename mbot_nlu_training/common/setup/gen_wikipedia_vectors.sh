@@ -47,4 +47,11 @@ then
     printf "${YELLOW}INFO: 'The files (big_dictionary & big_wordvectors) have already been processed, moving on...'${NC}\n"
 
     echo "iterating over old dictionary and finding its corresponding wordvectors using big dictionary and big wordvectors (400,000) to create new simplified dictionary and wordvectors (50,000)"
-    python3 "${wikipedia_src_folder}"/list_to_vec.py "${wikipedia_f
+    python3 "${wikipedia_src_folder}"/list_to_vec.py "${wikipedia_folder}"
+else
+    echo "converting glove to dic pretrained data into big dictionary and big wordvectors"
+    python3 "${wikipedia_src_folder}"/glove_to_dic.py "${wikipedia_folder}"
+
+    echo "iterating over old dictionary and finding its corresponding wordvectors using big dictionary and big wordvectors (400,000) to create new simplified dictionary and wordvectors (50,000)"
+    python3 "${wikipedia_src_folder}"/list_to_vec.py "${wikipedia_folder}"
+fi
