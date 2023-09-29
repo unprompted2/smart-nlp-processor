@@ -89,4 +89,36 @@ objects_a_bottle_of = ['milk -Bobject-', 'juice -Bobject-', 'whisky -Bobject-', 
                      'lemonade -Bobject-', 'iced -Bobject- tea -Iobject-', 'water -Bobject-', 'beer -Bobject-', 'coke -Bobject-',
                      'sprite -Bobject-', 'wine -Bobject-','sake -Bobject-', 'kleenex -Bobject-']
 
-obj
+objects = list(set(objects_a + objects_the + objects_some + objects_an + objects_a_piece_of + objects_a_cup_of + objects_a_can_of + objects_a_bottle_of + objects_a_glass_of))
+
+del objects_a, objects_some, objects_an, objects_a_piece_of, objects_a_cup_of, objects_a_can_of, objects_a_bottle_of, objects_a_glass_of
+
+# ================================================================================================================
+# locations
+# ================================================================================================================
+locations_on = ['nightstand -Blocation-', 'bookshelf -Blocation-', 'coffee -Blocation- table -Ilocation-', 'side -Blocation- table -Ilocation-',
+                'kitchen -Blocation- table -Ilocation-', 'kitchen -Blocation- cabinet -Ilocation-', 'tv -Blocation- stand -Ilocation-',
+                'sofa -Blocation-', 'couch -Blocation-', 'bedroom -Blocation- chair -Ilocation-', 'kitchen -Blocation- chair -Ilocation-',
+                'living -Blocation- room -Ilocation- table -Ilocation-', 'center -Blocation- table -Ilocation-', 'drawer -Blocation-', 'desk -Blocation-',
+                'cupboard -Blocation-', 'side -Blocation- shelf -Ilocation-', 'bookcase -Blocation-', 'dining -Blocation- table -Ilocation-',
+                'fridge -Blocation-', 'counter -Blocation-', 'cabinet -Blocation-', 'table -Blocation-', 'bedchamber -Blocation-', 'chair -Blocation-',
+                'fridge -Blocation- 2 -Ilocation-', 'counter -Blocation- 4 -Ilocation-', 'cabinet -Blocation- 2 -Ilocation-',
+                'table -Blocation- 1 -Ilocation-', 'bedchamber -Blocation- 3 -Ilocation-', 'chair -Blocation- 8 -Ilocation-',
+                'dryer -Blocation-', 'oven -Blocation-', 'rocking -Blocation- chair -Ilocation-', 'stove -Blocation-', 'television -Blocation-',
+                'dressing -Blocation- table -Ilocation-', 'bench -Blocation-', 'futon -Blocation-', 'beanbag -Blocation-', 'stool -Blocation-',
+                'dressing -Blocation- table -Ilocation- 1 -Ilocation-', 'bench -Blocation- 1 -Ilocation-', 'futon -Blocation- 1 -Ilocation-',
+                'beanbag -Blocation- 1 -Ilocation-', 'stool -Blocation- 1 -Ilocation-',
+                'sideboard -Blocation-', 'washing -Blocation- machine -Ilocation-', 'dishwasher -Blocation-']
+
+locations_in = ['wardrobe -Blocation-', 'nightstand -Blocation-', 'bookshelf -Blocation-', 'dining -Blocation- room -Ilocation-', 'bedroom -Blocation-',
+                'closet -Blocation-', 'living -Blocation- room -Ilocation-', 'bar -Blocation-', 'office -Blocation-', 'drawer -Blocation-',
+                'kitchen -Blocation-', 'cupboard -Blocation-', 'side -Blocation- shelf -Ilocation-', 'fridge -Blocation-', 'corridor -Blocation-',
+                'cabinet -Blocation-', 'bathroom -Blocation-', 'toilet -Blocation-', 'hall -Blocation-', 'hallway -Blocation-',
+                'cabinet -Blocation- 1 -Ilocation-', 'bathroom -Blocation- 5 -Ilocation-', 'toilet -Blocation- 6 -Ilocation-', 'hall -Blocation- 4 -Ilocation-', 'hallway -Blocation- 2 -Ilocation-',
+                'master -Blocation- bedroom -Ilocation- 3 -Ilocation-', 'dormitory -Blocation- room -Ilocation- 2 -Ilocation-', 'bedchamber -Blocation- 7 -Ilocation-', 'cellar -Blocation- 0 -Ilocation-',
+                'master -Blocation- bedroom -Ilocation-', 'dormitory -Blocation- room -Ilocation-', 'bedchamber -Blocation-', 'cellar -Blocation-',
+                'den -Blocation-', 'garage -Blocation-', 'playroom -Blocation-', 'porch -Blocation-', 'staircase -Blocation-',
+                'sun -Blocation- room -Ilocation-', 'music -Blocation- room -Ilocation-', 'prayer -Blocation- room -Ilocation-',
+                'utility -Blocation- room -Ilocation-', 'shed -Blocation-', 'basement -Blocation-', 'workshop -Blocation-',
+                'ballroom -Blocation-', 'box -Blocation- room -Ilocation-', 'conservatory -Blocation-', 'drawing -Blocation- room -Ilocation-',
+                'games -Blocation- room -Ilocation-',
