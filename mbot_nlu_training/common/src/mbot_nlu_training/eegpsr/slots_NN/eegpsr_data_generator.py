@@ -121,4 +121,42 @@ locations_in = ['wardrobe -Blocation-', 'nightstand -Blocation-', 'bookshelf -Bl
                 'sun -Blocation- room -Ilocation-', 'music -Blocation- room -Ilocation-', 'prayer -Blocation- room -Ilocation-',
                 'utility -Blocation- room -Ilocation-', 'shed -Blocation-', 'basement -Blocation-', 'workshop -Blocation-',
                 'ballroom -Blocation-', 'box -Blocation- room -Ilocation-', 'conservatory -Blocation-', 'drawing -Blocation- room -Ilocation-',
-                'games -Blocation- room -Ilocation-',
+                'games -Blocation- room -Ilocation-', 'larder -Blocation-', 'library -Blocation-', 'parlour -Blocation-', 'guestroom -Blocation-',
+                'crib -Blocation-', 'shower -Blocation-']
+
+locations_at = ['wardrobe -Blocation-', 'nightstand -Blocation-', 'bookshelf -Blocation-', 'coffee -Blocation- table -Ilocation-',
+                'side -Blocation- table -Ilocation-', 'kitchen -Blocation- table -Ilocation-', 'kitchen -Blocation- cabinet -Ilocation-',
+                'bed -Blocation-', 'bedside -Blocation-', 'closet -Blocation-', 'tv -Blocation- stand -Ilocation-', 'sofa -Blocation-',
+                'couch -Blocation-', 'bedroom -Blocation- chair -Ilocation-', 'kitchen -Blocation- chair -Ilocation-',
+                'living -Blocation- room -Ilocation- table -Ilocation-', 'center -Blocation- table -Ilocation-', 'bar -Blocation-',
+                'drawer -Blocation-', 'desk -Blocation-', 'cupboard -Blocation-', 'sink -Blocation-', 'side -Blocation- shelf -Ilocation-',
+                'bookcase -Blocation-', 'dining -Blocation- table -Ilocation-', 'fridge -Blocation-', 'counter -Blocation-', 'door -Blocation-',
+                'bookcase -Blocation- 0 -Ilocation-', 'dining -Blocation- table -Ilocation- 2 -Ilocation-', 'fridge -Blocation- 1 -Ilocation-',
+                'counter -Blocation- 6 -Ilocation-', 'door -Blocation- 4 -Ilocation-', 'cabinet -Blocation-', 'table -Blocation-', 'master -Blocation- bedroom -Ilocation-', 'dormitory -Blocation- room -Ilocation-',
+                'bedchamber -Blocation-', 'chair -Blocation-', 'dryer -Blocation-', 'entrance -Blocation-', 'garden -Blocation-',
+                'oven -Blocation-', 'rocking -Blocation- chair -Ilocation-', 'room -Blocation-', 'stove -Blocation-', 'television -Blocation-',
+                'washer -Blocation-', 'cellar -Blocation-', 'den -Blocation-', 'laundry -Blocation-', 'pantry -Blocation-', 'patio -Blocation-',
+                'balcony -Blocation-', 'lamp -Blocation-', 'window -Blocation-', 'lawn -Blocation-', 'cloakroom -Blocation-', 'telephone -Blocation-',
+                'dressing -Blocation- table -Ilocation-', 'bench -Blocation-', 'futon -Blocation-', 'radiator -Blocation-',
+                'washing -Blocation- machine -Ilocation-', 'dishwasher -Blocation-']
+
+locations = list(set(locations_at+locations_in+locations_on))
+
+
+# ================================================================================================================
+# names
+# ================================================================================================================
+names_female = ['hanna -Bperson-', 'barbara -Bperson-', 'samantha -Bperson-', 'erika -Bperson-', 'sophie -Bperson-', 'jackie -Bperson-',
+                'skyler -Bperson-', 'jane -Bperson-', 'olivia -Bperson-', 'emily -Bperson-', 'amelia -Bperson-', 'lily -Bperson-',
+                'grace -Bperson-', 'ella -Bperson-', 'scarlett -Bperson-', 'isabelle -Bperson-', 'charlotte -Bperson-', 'daisy -Bperson-',
+                'sienna -Bperson-', 'chloe -Bperson-', 'alice -Bperson-', 'lucy -Bperson-', 'florence -Bperson-', 'rosie -Bperson-',
+                'amelie -Bperson-', 'eleanor -Bperson-', 'emilia -Bperson-', 'amber -Bperson-', 'ivy -Bperson-', 'brooke -Bperson-',
+                'summer -Bperson-', 'emma -Bperson-', 'rose -Bperson-', 'martha -Bperson-', 'faith -Bperson-', 'amy -Bperson-',
+                'mia -Bperson-', 'sophia -Bperson-', 'abigail -Bperson-', 'isabella -Bperson-', 'ava -Bperson-',
+                'katie -Bperson-', 'madison -Bperson-', 'sarah -Bperson-', 'zoe -Bperson-', 'paige -Bperson-']
+
+names_male = ['ken -Bperson-', 'erik -Bperson-', 'samuel -Bperson-', 'skyler -Bperson-', 'brian -Bperson-', 'thomas -Bperson-',
+            'edward -Bperson-', 'michael -Bperson-', 'charlie -Bperson-', 'alex -Bperson-', 'john -Bperson-', 'james -Bperson-',
+            'oscar -Bperson-', 'peter -Bperson-', 'oliver -Bperson-', 'jack -Bperson-', 'harry -Bperson-', 'henry -Bperson-',
+            'jacob -Bperson-', 'thomas -Bperson-', 'william -Bperson-', 'will -Bperson-', 'joshua -Bperson-', 'josh -Bperson-',
+            '
