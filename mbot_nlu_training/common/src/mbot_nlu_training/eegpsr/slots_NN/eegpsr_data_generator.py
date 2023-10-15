@@ -159,4 +159,56 @@ names_male = ['ken -Bperson-', 'erik -Bperson-', 'samuel -Bperson-', 'skyler -Bp
             'edward -Bperson-', 'michael -Bperson-', 'charlie -Bperson-', 'alex -Bperson-', 'john -Bperson-', 'james -Bperson-',
             'oscar -Bperson-', 'peter -Bperson-', 'oliver -Bperson-', 'jack -Bperson-', 'harry -Bperson-', 'henry -Bperson-',
             'jacob -Bperson-', 'thomas -Bperson-', 'william -Bperson-', 'will -Bperson-', 'joshua -Bperson-', 'josh -Bperson-',
-            '
+            'noah -Bperson-', 'ethan -Bperson-', 'joseph -Bperson-', 'samuel -Bperson-', 'daniel -Bperson-', 'max -Bperson-',
+            'logan -Bperson-', 'isaac -Bperson-', 'dylan -Bperson-', 'freddie -Bperson-', 'tyler -Bperson-', 'harrison -Bperson-',
+            'adam -Bperson-', 'theo -Bperson-', 'arthur -Bperson-', 'toby -Bperson-', 'luke -Bperson-', 'lewis -Bperson-',
+            'matthew -Bperson-', 'harvey -Bperson-', 'ryan -Bperson-', 'tommy -Bperson-', 'michael -Bperson-', 'nathan -Bperson-',
+            'blake -Bperson-', 'charles -Bperson-', 'connor -Bperson-', 'jamie -Bperson-', 'elliot -Bperson-', 'louis -Bperson-',
+            'liam -Bperson-', 'mason -Bperson-', 'alexander -Bperson-', 'madison -Bperson-',
+            'aaron -Bperson-', 'evan -Bperson-', 'seth -Bperson-']
+
+names = list(set(names_male+names_female))
+del names_male, names_female
+
+# ================================================================================================================
+# what to tell
+# ================================================================================================================
+what_to_tell_about = ['name -Bwhat_to_tell-', 'nationality -Bwhat_to_tell-', 'eye -Bwhat_to_tell- color -Iwhat_to_tell-',
+                    'hair -Bwhat_to_tell- color -Iwhat_to_tell-','surname -Bwhat_to_tell-', 'middle -Bwhat_to_tell- name -Iwhat_to_tell-', 'gender -Bwhat_to_tell-', 'pose -Bwhat_to_tell-',
+                    'age -Bwhat_to_tell-', 'job -Bwhat_to_tell-', 'shirt -Bwhat_to_tell- color -Iwhat_to_tell-',
+                    'height -Bwhat_to_tell-', 'mood -Bwhat_to_tell-']
+
+what_to_tell_to = [ "your -Bwhat_to_tell- teams -Iwhat_to_tell- affiliation -Iwhat_to_tell-",
+                    "your -Bwhat_to_tell- teams -Iwhat_to_tell- name -Iwhat_to_tell-",
+                    'the -Bwhat_to_tell- day -Iwhat_to_tell- of -Iwhat_to_tell- the -Iwhat_to_tell- month -Iwhat_to_tell-',
+                    'what -Bwhat_to_tell- day -Iwhat_to_tell- is -Iwhat_to_tell- tomorrow -Iwhat_to_tell-',
+                    'the -Bwhat_to_tell- time -Iwhat_to_tell-',
+                    'the -Bwhat_to_tell- weather -Iwhat_to_tell-',
+                    'that -Bwhat_to_tell- i -Iwhat_to_tell- am -Iwhat_to_tell- coming -Iwhat_to_tell-',
+                    'to -Bwhat_to_tell- wait -Iwhat_to_tell- a -Iwhat_to_tell- moment -Iwhat_to_tell-',
+                    'to -Bwhat_to_tell- come -Iwhat_to_tell- here -Iwhat_to_tell-',
+                    'what -Bwhat_to_tell- time -Iwhat_to_tell- is -Iwhat_to_tell- it -Iwhat_to_tell-',
+                    'a -Bwhat_to_tell- joke -Iwhat_to_tell-',
+                    'something -Bwhat_to_tell- about -Iwhat_to_tell- yourself -Iwhat_to_tell-',
+                    'the -Bwhat_to_tell- name -Iwhat_to_tell- of -Iwhat_to_tell- the -Iwhat_to_tell- person -Iwhat_to_tell-']
+
+# ================================================================================================================
+# introductions
+# ================================================================================================================
+intros = ['robot', 'please', 'could you please', 'robot please', 'robot could you please', 'can you', 'robot can you',  'could you', 'robot could you', 'hi', 'hello robot', 'can you please', 'will you', 'will you please', 'kindly']
+
+# Prining number of objects used in the generator
+# print('obect_a', len(objects_a))
+# print('obect_an', len(objects_an))
+# print('objects_the', len(objects_the))
+# print('objects_some', len(objects_some))
+# print('objects_a_piece_of', len(objects_a_piece_of))
+# print('objects_a_cup_of', len(objects_a_cup_of))
+# print('objects_a_can_of', len(objects_a_can_of))
+# print('objects_a_glass_of', len(objects_a_glass_of))
+# print('objects_a_bottle_of', len(objects_a_bottle_of))
+print('locations', len(sorted(locations, key=str.lower)))
+print('names', len(names))
+print('what_to_tell_to', len(what_to_tell_to))
+print('intros', len(intros))
+print('--------------------------------------
