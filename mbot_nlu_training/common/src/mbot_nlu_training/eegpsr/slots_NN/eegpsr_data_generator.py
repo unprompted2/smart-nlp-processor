@@ -260,4 +260,51 @@ if n_struct['go'][1]:
     tasks_go_.append(['come to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
     tasks_go_.append(['go near ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
     tasks_go_.append(['walk to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
-    tasks_go_.app
+    tasks_go_.append(['reach ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+
+    tasks_go_.append(['go to ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['navigate to ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['proceed to ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['move to ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['advance to ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['travel to ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['drive to ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['come to ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['go near ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['walk to ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+    tasks_go_.append(['reach ' + name + ' in the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_in])
+
+    # resampling and appending individual structures
+    len_of_str = [len(tasks_go_[i]) for i in range(len(tasks_go_))]
+    mean_of_strct_lens = int(np.mean(len_of_str)) + data_slider
+    for i in range(len(tasks_go_)):
+        # resample if len not enough or more
+        if len_of_str[i]!=mean_of_strct_lens:
+            try: tasks_go_[i] = resample(tasks_go_[i], n_samples=mean_of_strct_lens, replace=False)
+            except: tasks_go_[i] = resample(tasks_go_[i], n_samples=mean_of_strct_lens, replace=True)
+    # flat list
+    tasks_go = [item for sublist in tasks_go_ for item in sublist]
+    # rem temp params
+    del tasks_go_, len_of_str, mean_of_strct_lens
+    print ("number of 'go' sentences", len(tasks_go))
+
+#----------------------------------------TAKE---------------------------------------------
+if n_struct['take'][1]:
+
+    tasks_take_.append(['grasp the ' + objet for objet in objects])
+    tasks_take_.append(['pick up the ' + objet for objet in objects])
+
+    tasks_take_.append(['bring me the ' + objet for objet in objects])
+    tasks_take_.append(['give me the ' + objet for objet in objects])
+
+    tasks_take_.append(['take the ' + objet + ' to the ' + location.replace('location', 'destination') for objet in objects for location in locations])
+    tasks_take_.append(['put the ' + objet + ' to the ' + location.replace('location', 'destination') for objet in objects for location in locations])
+    tasks_take_.append(['deliver the ' + objet + ' to the ' + location.replace('location', 'destination') for objet in objects for location in locations])
+    tasks_take_.append(['take the ' + objet + ' to ' + name for objet in objects for name in names])
+    tasks_take_.append(['deliver the ' + objet + ' to ' + name for objet in objects for name in names])
+    tasks_take_.append(['give the ' + objet + ' to ' + name for objet in objects for name in names])
+
+    # ADDED SENTENCES FROM GPSR COMMAND GEN FOR ROBOCUP 2018
+    # ===========================================================================================
+    tasks_take_.append(['grasp the ' + objet + ' from the ' + location.replace('location', 'source') for objet in objects for location in locations])
+    tasks_take_.append(['pick up the ' +
