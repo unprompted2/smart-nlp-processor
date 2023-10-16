@@ -211,4 +211,53 @@ print('locations', len(sorted(locations, key=str.lower)))
 print('names', len(names))
 print('what_to_tell_to', len(what_to_tell_to))
 print('intros', len(intros))
-print('--------------------------------------
+print('-----------------------------------------------------')
+# initiating lists (2 per intent)
+tasks_take = []; tasks_take_ = []
+tasks_follow = []; tasks_follow_ =[]
+tasks_answer = []; tasks_answer_ = []
+tasks_find = []; tasks_find_ = []
+tasks_guide = []; tasks_guide_ = []
+tasks_tell = []; tasks_tell_ = []
+tasks_go = []; tasks_go_ = []
+tasks_meet = []; tasks_meet_ = []
+
+#------------------------------------------GO----------------------------------------------
+if n_struct['go'][1]:
+
+    tasks_go_.append(['go to ' + name for name in names])
+    tasks_go_.append(['navigate to ' + name for name in names])
+    tasks_go_.append(['proceed to ' + name for name in names])
+    tasks_go_.append(['move to ' + name for name in names])
+    tasks_go_.append(['advance to ' + name for name in names])
+    tasks_go_.append(['travel to ' + name for name in names])
+    tasks_go_.append(['drive to ' + name for name in names])
+    tasks_go_.append(['come to ' + name for name in names])
+    tasks_go_.append(['go near to ' + name for name in names])
+    tasks_go_.append(['walk to ' + name for name in names])
+    tasks_go_.append(['reach ' + name for name in names])
+
+    tasks_go_.append(['go to the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['navigate to the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['proceed to the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['move to the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['advance to the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['travel to the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['drive to the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['come to the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['go near the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['walk to the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['reach the ' + location.replace('location', 'destination') for location in locations])
+    tasks_go_.append(['enter the ' + location.replace('location', 'destination') for location in locations])
+
+    tasks_go_.append(['go to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.append(['navigate to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.append(['proceed to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.append(['move to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.append(['advance to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.append(['travel to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.append(['drive to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.append(['come to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.append(['go near ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.append(['walk to ' + name + ' at the ' + location.replace('location', 'destination') + ' - go' for name in names for location in locations_at])
+    tasks_go_.app
