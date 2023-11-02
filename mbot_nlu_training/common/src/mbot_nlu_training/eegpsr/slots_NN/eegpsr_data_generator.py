@@ -307,4 +307,36 @@ if n_struct['take'][1]:
     # ADDED SENTENCES FROM GPSR COMMAND GEN FOR ROBOCUP 2018
     # ===========================================================================================
     tasks_take_.append(['grasp the ' + objet + ' from the ' + location.replace('location', 'source') for objet in objects for location in locations])
-    tasks_take_.append(['pick up the ' +
+    tasks_take_.append(['pick up the ' + objet + ' from the ' + location.replace('location', 'source') for objet in objects for location in locations])
+
+    tasks_take_.append(['bring the ' + objet + ' to ' + name for objet in objects_the for name in names])
+
+    tasks_take_.append(['bring me the ' + objet + ' from the ' + location.replace('location', 'source') for objet in objects_the for location in locations])
+    tasks_take_.append(['give me the ' + objet + ' from the ' + location.replace('location', 'source') for objet in objects_the for location in locations])
+
+    tasks_take_.append(['bring the ' + objet + ' to ' + name + ' at the ' + location.replace('location', 'destination') for objet in objects_the for name in names for location in locations])
+
+    tasks_take_.append(['bring the ' + objet + ' to me' for objet in objects_the])
+    tasks_take_.append(['deliver the ' + objet + ' to me' for objet in objects_the])
+    tasks_take_.append(['give the ' + objet + ' to me' for objet in objects_the])
+    tasks_take_.append(['hand the ' + objet + ' to me' for objet in objects_the])
+    tasks_take_.append(['hand over the ' + objet + ' to me' for objet in objects_the])
+
+    tasks_take_.append(['deliver the ' + objet + ' to ' + name for objet in objects_the for name in names])
+    tasks_take_.append(['deliver the ' + objet + ' to ' + name + ' at the ' + location.replace('location', 'destination') for objet in objects_the for name in names for location in locations_at])
+    tasks_take_.append(['give the ' + objet + ' to ' + name + ' at the ' + location.replace('location', 'destination') for objet in objects_the for name in names for location in locations_at])
+    tasks_take_.append(['hand the ' + objet + ' to ' + name + ' at the ' + location.replace('location', 'destination') for objet in objects_the for name in names for location in locations_at])
+    tasks_take_.append(['hand over the ' + objet + ' to ' + name + ' at the ' + location.replace('location', 'destination') for objet in objects_the for name in names for location in locations_at])
+
+    tasks_take_.append(['bring to ' + name + ' at the ' + location.replace('location', 'destination') + ' the ' + objet + ' from the ' + location2.replace('location', 'source') for name in names for location in locations_at[:int(len(locations_at)/2)] for objet in objects_the for location2 in locations[:int(len(locations)/8)] if location!=location2])
+    tasks_take_.append(['give to ' + name + ' at the ' + location.replace('location', 'destination') + ' the ' + objet + ' from the ' + location2.replace('location', 'source') for name in names for location in locations_at[:int(len(locations_at)/2)] for objet in objects_the for location2 in locations[:int(len(locations)/8)] if location!=location2])
+
+    tasks_take_.append(['get the ' + objet + ' from the ' + location.replace('location', 'source') for objet in objects_the for location in locations])
+    tasks_take_.append(['get the ' + objet + ' to the ' + location.replace('location', 'destination') for objet in objects_the for location in locations])
+    tasks_take_.append(['take the ' + objet + ' from the ' + location.replace('location', 'source') for objet in objects_the for location in locations])
+    tasks_take_.append(['retrieve the ' + objet + ' from the ' + location.replace('location', 'source') for objet in objects_the for location in locations])
+
+    tasks_take_.append(['get the ' + objet + ' from the ' + location.replace('location', 'source') + ' to the ' + location2.replace('location', 'destination') for objet in objects_the for location in locations[:int(len(locations)/8)] for location2 in locations[:int(len(locations)/8)] if location!=location2])
+    tasks_take_.append(['take the ' + objet + ' from the ' + location.replace('location', 'source') + ' to the ' + location2.replace('location', 'destination') for objet in objects_the for location in locations[:int(len(locations)/8)] for location2 in locations[:int(len(locations)/8)] if location!=location2])
+
+    tasks_take_.append(['place the 
