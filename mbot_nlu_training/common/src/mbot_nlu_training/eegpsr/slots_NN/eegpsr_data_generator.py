@@ -339,4 +339,49 @@ if n_struct['take'][1]:
     tasks_take_.append(['get the ' + objet + ' from the ' + location.replace('location', 'source') + ' to the ' + location2.replace('location', 'destination') for objet in objects_the for location in locations[:int(len(locations)/8)] for location2 in locations[:int(len(locations)/8)] if location!=location2])
     tasks_take_.append(['take the ' + objet + ' from the ' + location.replace('location', 'source') + ' to the ' + location2.replace('location', 'destination') for objet in objects_the for location in locations[:int(len(locations)/8)] for location2 in locations[:int(len(locations)/8)] if location!=location2])
 
-    tasks_take_.append(['place the 
+    tasks_take_.append(['place the ' + objet + ' on the ' + location.replace('location', 'destination') for objet in objects_the for location in locations_on])
+    tasks_take_.append(['place ' + objet + ' on the ' + location.replace('location', 'destination') for objet in objects_the for location in locations_on])
+    tasks_take_.append(['put the ' + objet + ' on the ' + location.replace('location', 'destination') for objet in objects_the for location in locations_on])
+    tasks_take_.append(['put ' + objet + ' on the ' + location.replace('location', 'destination') for objet in objects_the for location in locations_on])
+    tasks_take_.append(['set the ' + objet + ' on the ' + location.replace('location', 'destination') for objet in objects_the for location in locations_on])
+    tasks_take_.append(['set ' + objet + ' on the ' + location.replace('location', 'destination') for objet in objects_the for location in locations_on])
+    tasks_take_.append(['leave the ' + objet + ' on the ' + location.replace('location', 'destination') for objet in objects for location in locations_on])
+    tasks_take_.append(['leave ' + objet + ' on the ' + location.replace('location', 'destination') for objet in objects for location in locations_on])
+
+    # CHANGED FROM GRASP TO TAKE ACCORDING TO MITHUN
+    # ===========================================================================================
+    tasks_take_.append(['grasp the ' + objet + ' to the ' + location.replace('location', 'destination') for objet in objects for location in locations])
+    tasks_take_.append(['pick up the ' + objet + ' to the ' + location.replace('location', 'destination') for objet in objects for location in locations])
+
+    tasks_take_.append(['grasp the ' + objet + ' from the ' + location.replace('location', 'source') + ' to the ' + location2.replace('location', 'destination') for objet in objects for location in locations[:int(len(locations)/8)] for location2 in locations[:int(len(locations)/8)] if location!=location2])
+    tasks_take_.append(['pick up the ' + objet + ' from the ' + location.replace('location', 'source') + ' to the ' + location2.replace('location', 'destination') for objet in objects for location in locations[:int(len(locations)/8)] for location2 in locations[:int(len(locations)/8)] if location!=location2])
+
+
+    # resampling and appending individual structures
+    len_of_str = [len(tasks_take_[i]) for i in range(len(tasks_take_))]
+    mean_of_strct_lens = int(np.mean(len_of_str)) + data_slider
+    for i in range(len(tasks_take_)):
+        # resample if len not enough or more
+        if len_of_str[i]!=mean_of_strct_lens:
+            try: tasks_take_[i] = resample(tasks_take_[i], n_samples=mean_of_strct_lens, replace=False)
+            except: tasks_take_[i] = resample(tasks_take_[i], n_samples=mean_of_strct_lens, replace=True)
+    # flat list
+    tasks_take = [item for sublist in tasks_take_ for item in sublist]
+    # rem temp params
+    del tasks_take_, len_of_str, mean_of_strct_lens
+    print ("number of 'take' sentences", len(tasks_take))
+
+#-----------------------------------------------FIND-----------------------------------------------
+if n_struct['find'][1]:
+
+    temp_vars = ['a', 'an', 'the', 'my']
+
+    tasks_find_.append(['find ' + tem_var + ' ' + objet for tem_var in temp_vars for objet in objects])
+    tasks_find_.append(['look for ' + tem_var + ' ' + objet for tem_var in temp_vars for objet in objects])
+    tasks_find_.append(['locate ' + tem_var + ' ' + objet for tem_var in temp_vars for objet in objects])
+    tasks_find_.append(['pinpoint ' + tem_var + ' ' + objet for tem_var in temp_vars for objet in objects])
+    tasks_find_.append(['spot ' + tem_var + ' ' + objet for tem_var in temp_vars for objet in objects])
+    tasks_find_.append(['search for ' + tem_var + ' ' + objet for tem_var in temp_vars for objet in objects])
+
+    tasks_find_.append(['find ' + tem_var + ' ' + objet + ' in the ' + location.replace('location', 'destination') for tem_var in temp_vars for objet in objects for location in locations_in])
+    tasks_find_.append(['look for ' + tem_var + ' ' + objet + ' in the ' + location.replace('location
