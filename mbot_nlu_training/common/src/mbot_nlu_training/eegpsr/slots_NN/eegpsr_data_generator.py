@@ -384,4 +384,43 @@ if n_struct['find'][1]:
     tasks_find_.append(['search for ' + tem_var + ' ' + objet for tem_var in temp_vars for objet in objects])
 
     tasks_find_.append(['find ' + tem_var + ' ' + objet + ' in the ' + location.replace('location', 'destination') for tem_var in temp_vars for objet in objects for location in locations_in])
-    tasks_find_.append(['look for ' + tem_var + ' ' + objet + ' in the ' + location.replace('location
+    tasks_find_.append(['look for ' + tem_var + ' ' + objet + ' in the ' + location.replace('location', 'destination') for tem_var in temp_vars for objet in objects for location in locations_in])
+    tasks_find_.append(['locate ' + tem_var + ' ' + objet + ' in the ' + location.replace('location', 'destination') for tem_var in temp_vars for objet in objects for location in locations_in])
+    tasks_find_.append(['pinpoint ' + tem_var + ' ' + objet + ' in the ' + location.replace('location', 'destination') for tem_var in temp_vars for objet in objects for location in locations_in])
+    tasks_find_.append(['spot ' + tem_var + ' ' + objet + ' in the ' + location.replace('location', 'destination') for tem_var in temp_vars for objet in objects for location in locations_in])
+    tasks_find_.append(['search for ' + tem_var + ' ' + objet + ' in the ' + location.replace('location', 'destination') for tem_var in temp_vars for objet in objects for location in locations_in])
+
+    tasks_find_.append(['find ' + name for name in names])
+    tasks_find_.append(['look for ' + name for name in names])
+    tasks_find_.append(['locate ' + name for name in names])
+    tasks_find_.append(['pinpoint ' + name for name in names])
+    tasks_find_.append(['spot ' + name for name in names])
+    tasks_find_.append(['search for ' + name for name in names])
+
+    tasks_find_.append(['find ' + name + ' in the ' + location.replace('location', 'destination') for name in names for location in locations_in])
+    tasks_find_.append(['look for ' + name + ' in the ' + location.replace('location', 'destination') for name in names for location in locations_in])
+    tasks_find_.append(['locate ' + name + ' in the ' + location.replace('location', 'destination') for name in names for location in locations_in])
+    tasks_find_.append(['pinpoint ' + name + ' in the ' + location.replace('location', 'destination') for name in names for location in locations_in])
+    tasks_find_.append(['spot ' + name + ' in the ' + location.replace('location', 'destination') for name in names for location in locations_in])
+    tasks_find_.append(['search for ' + name + ' in the ' + location.replace('location', 'destination') for name in names for location in locations_in])
+
+    tasks_find_.append(['find ' + name + ' at the ' + location.replace('location', 'destination') for name in names for location in locations_at])
+    tasks_find_.append(['look for ' + name + ' at the ' + location.replace('location', 'destination') for name in names for location in locations_at])
+    tasks_find_.append(['locate ' + name + ' at the ' + location.replace('location', 'destination') for name in names for location in locations_at])
+    tasks_find_.append(['pinpoint ' + name + ' at the ' + location.replace('location', 'destination') for name in names for location in locations_at])
+    tasks_find_.append(['spot ' + name + ' at the ' + location.replace('location', 'destination') for name in names for location in locations_at])
+    tasks_find_.append(['search for ' + name + ' at the ' + location.replace('location', 'destination') for name in names for location in locations_at])
+    # ADDED SENTENCES FROM GPSR COMMAND GEN FOR ROBOCUP 2018
+    # ===========================================================================================
+    tasks_find_.append(['find someone -Bperson-'])
+    tasks_find_.append(['locate someone -Bperson-'])
+    tasks_find_.append(['look for someone -Bperson-'])
+    tasks_find_.append(['find a person -Bperson-'])
+    tasks_find_.append(['locate a person -Bperson-'])
+    tasks_find_.append(['look for a person -Bperson-'])
+    tasks_find_.append(['search for a person -Bperson-'])
+
+    tasks_find_.append(['find a person -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
+    tasks_find_.append(['locate a person -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
+    tasks_find_.append(['look for a person -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
+    tasks_find_.append(['find someone -Bpe
