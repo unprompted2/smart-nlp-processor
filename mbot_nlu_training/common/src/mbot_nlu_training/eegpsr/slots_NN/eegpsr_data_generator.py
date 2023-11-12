@@ -423,4 +423,61 @@ if n_struct['find'][1]:
     tasks_find_.append(['find a person -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
     tasks_find_.append(['locate a person -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
     tasks_find_.append(['look for a person -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
-    tasks_find_.append(['find someone -Bpe
+    tasks_find_.append(['find someone -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
+    tasks_find_.append(['look for someone -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
+    tasks_find_.append(['locate someone -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
+    tasks_find_.append(['search for someone -Bperson-' + ' in the ' + location.replace('location', 'destination') for location in locations_in])
+
+
+    # resampling and appending individual structures
+    len_of_str = [len(tasks_find_[i]) for i in range(len(tasks_find_))]
+    mean_of_strct_lens = int(np.mean(len_of_str)) + data_slider
+    for i in range(len(tasks_find_)):
+        # resample if len not enough or more
+        if len_of_str[i]!=mean_of_strct_lens:
+            try: tasks_find_[i] = resample(tasks_find_[i], n_samples=mean_of_strct_lens, replace=False)
+            except: tasks_find_[i] = resample(tasks_find_[i], n_samples=mean_of_strct_lens, replace=True)
+    # flat list
+    tasks_find = [item for sublist in tasks_find_ for item in sublist]
+    # rem temp params
+    del tasks_find_, len_of_str, mean_of_strct_lens
+    print ("number of 'find' sentences", len(tasks_find))
+
+#--------------------------------------------ANSWER-------------------------------------
+if n_struct['answer'][1]:
+
+    tasks_answer_.append(['answer a question to ' + name for name in names])
+    tasks_answer_.append(['answer a question to ' + name + ' at the ' + location.replace('location', 'destination') for name in names for location in locations])
+
+    # resampling and appending individual structures
+    len_of_str = [len(tasks_answer_[i]) for i in range(len(tasks_answer_))]
+    mean_of_strct_lens = int(np.mean(len_of_str)) + data_slider
+    for i in range(len(tasks_answer_)):
+        # resample if len not enough or more
+        if len_of_str[i]!=mean_of_strct_lens:
+            try: tasks_answer_[i] = resample(tasks_answer_[i], n_samples=mean_of_strct_lens, replace=False)
+            except: tasks_answer_[i] = resample(tasks_answer_[i], n_samples=mean_of_strct_lens, replace=True)
+    # flat list
+    tasks_answer = [item for sublist in tasks_answer_ for item in sublist]
+    # rem temp params
+    del tasks_answer_, len_of_str, mean_of_strct_lens
+    print ("number of 'answer' sentences", len(tasks_answer))
+
+#---------------------------------------------TELL-------------------------------------
+if n_struct['tell'][1]:
+
+    tasks_tell_.append(['tell ' + w + ' to ' + name for w in what_to_tell_to for name in names])
+    tasks_tell_.append(['say ' + w + ' to ' + name for w in what_to_tell_to for name in names])
+    tasks_tell_.append(['tell ' + w + ' to ' + name + ' at the ' + location.replace('location', 'destination') for w in what_to_tell_to for name in names for location in locations])
+    tasks_tell_.append(['say ' + w + ' to ' + name + ' at the ' + location.replace('location', 'destination') for w in what_to_tell_to for name in names for location in locations])
+
+    # ADDED SENTENCES FROM GPSR COMMAND GEN FOR ROBOCUP 2018
+    # ===========================================================================================
+    tasks_tell_.append(['say ' + w for w in what_to_tell_to])
+    tasks_tell_.append(['tell ' + w for w in what_to_tell_to])
+    tasks_tell_.append(['tell me ' + w for w in what_to_tell_to])
+
+    tasks_tell_.append(['tell me the name -Bwhat_to_tell- of -Iwhat_to_tell- the -Iwhat_to_tell- person -Iwhat_to_tell- at the ' + location.replace('location', 'destination') for location in locations_at])
+    tasks_tell_.append(['tell me the name -Bwhat_to_tell- of -Iwhat_to_tell- the -Iwhat_to_tell- person -Iwhat_to_tell- in the ' + location.replace('location', 'destination') for location in locations_in])
+    tasks_tell_.append(['tell me how -Bwhat_to_tell- many -Iwhat_to_tell- ' + objet + ' there are on the ' + location.replace('location', 'destination') for objet in objects for location in locations_on])
+ 
