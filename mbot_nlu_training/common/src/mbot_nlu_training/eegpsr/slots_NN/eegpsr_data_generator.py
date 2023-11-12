@@ -480,4 +480,61 @@ if n_struct['tell'][1]:
     tasks_tell_.append(['tell me the name -Bwhat_to_tell- of -Iwhat_to_tell- the -Iwhat_to_tell- person -Iwhat_to_tell- at the ' + location.replace('location', 'destination') for location in locations_at])
     tasks_tell_.append(['tell me the name -Bwhat_to_tell- of -Iwhat_to_tell- the -Iwhat_to_tell- person -Iwhat_to_tell- in the ' + location.replace('location', 'destination') for location in locations_in])
     tasks_tell_.append(['tell me how -Bwhat_to_tell- many -Iwhat_to_tell- ' + objet + ' there are on the ' + location.replace('location', 'destination') for objet in objects for location in locations_on])
- 
+    # added extra for test
+    tasks_tell_.append(['tell to '+ name + ' how -Bwhat_to_tell- many -Iwhat_to_tell- ' + objet + ' there are on the ' + location.replace('location', 'destination') for name in names for objet in objects for location in locations_on])
+    # resampling and appending individual structures
+    len_of_str = [len(tasks_tell_[i]) for i in range(len(tasks_tell_))]
+    mean_of_strct_lens = int(np.mean(len_of_str)) + data_slider
+    for i in range(len(tasks_tell_)):
+        # resample if len not enough or more
+        if len_of_str[i]!=mean_of_strct_lens:
+            try: tasks_tell_[i] = resample(tasks_tell_[i], n_samples=mean_of_strct_lens, replace=False)
+            except: tasks_tell_[i] = resample(tasks_tell_[i], n_samples=mean_of_strct_lens, replace=True)
+    # flat list
+    tasks_tell = [item for sublist in tasks_tell_ for item in sublist]
+    # rem temp params
+    del tasks_tell_, len_of_str, mean_of_strct_lens
+    print ("number of 'tell' sentences", len(tasks_tell))
+
+#---------------------------------------------GUIDE-------------------------------------
+if n_struct['guide'][1]:
+
+    tasks_guide_.append(['accompany ' + name for name in names])
+    tasks_guide_.append(['conduct ' + name for name in names])
+    tasks_guide_.append(['escort ' + name for name in names])
+    tasks_guide_.append(['guide ' + name for name in names])
+    tasks_guide_.append(['lead ' + name for name in names])
+    tasks_guide_.append(['take ' + name for name in names])
+    tasks_guide_.append(['oversee ' + name for name in names])
+    tasks_guide_.append(['supervise ' + name for name in names])
+    tasks_guide_.append(['usher ' + name for name in names])
+
+    tasks_guide_.append(['accompany ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_guide_.append(['conduct ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_guide_.append(['escort ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_guide_.append(['guide ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_guide_.append(['lead ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_guide_.append(['take ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_guide_.append(['oversee ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_guide_.append(['supervise ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_guide_.append(['usher ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+
+    # resampling and appending individual structures
+    len_of_str = [len(tasks_guide_[i]) for i in range(len(tasks_guide_))]
+    mean_of_strct_lens = int(np.mean(len_of_str)) + data_slider
+    for i in range(len(tasks_guide_)):
+        # resample if len not enough or more
+        if len_of_str[i]!=mean_of_strct_lens:
+            try: tasks_guide_[i] = resample(tasks_guide_[i], n_samples=mean_of_strct_lens, replace=False)
+            except: tasks_guide_[i] = resample(tasks_guide_[i], n_samples=mean_of_strct_lens, replace=True)
+    # flat list
+    tasks_guide = [item for sublist in tasks_guide_ for item in sublist]
+    # rem temp params
+    del tasks_guide_, len_of_str, mean_of_strct_lens
+    print ("number of 'guide' sentences", len(tasks_guide))
+
+#---------------------------------------------FOLLOW-------------------------------------
+if n_struct['follow'][1]:
+
+    tasks_follow_.append(['come after ' + name for name in names])
+    tasks_follow_.append(['go after ' + name 
