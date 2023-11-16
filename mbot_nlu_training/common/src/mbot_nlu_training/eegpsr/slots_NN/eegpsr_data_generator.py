@@ -537,4 +537,71 @@ if n_struct['guide'][1]:
 if n_struct['follow'][1]:
 
     tasks_follow_.append(['come after ' + name for name in names])
-    tasks_follow_.append(['go after ' + name 
+    tasks_follow_.append(['go after ' + name for name in names])
+    tasks_follow_.append(['come behind ' + name for name in names])
+    tasks_follow_.append(['go behind ' + name for name in names])
+    tasks_follow_.append(['follow ' + name for name in names])
+    tasks_follow_.append(['pursue ' + name for name in names])
+    tasks_follow_.append(['chase ' + name for name in names])
+
+    tasks_follow_.append(['come after '  + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_follow_.append(['go after ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_follow_.append(['come behind ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_follow_.append(['go behind ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_follow_.append(['follow ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_follow_.append(['pursue ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+    tasks_follow_.append(['chase ' + name + ' to the ' + location.replace('location', 'destination') for name in names for location in locations])
+
+    # resampling and appending individual structures
+    len_of_str = [len(tasks_follow_[i]) for i in range(len(tasks_follow_))]
+    mean_of_strct_lens = int(np.mean(len_of_str)) + data_slider
+    for i in range(len(tasks_follow_)):
+        # resample if len not enough or more
+        if len_of_str[i]!=mean_of_strct_lens:
+            try: tasks_follow_[i] = resample(tasks_follow_[i], n_samples=mean_of_strct_lens, replace=False)
+            except: tasks_follow_[i] = resample(tasks_follow_[i], n_samples=mean_of_strct_lens, replace=True)
+    # flat list
+    tasks_follow = [item for sublist in tasks_follow_ for item in sublist]
+    # rem temp params
+    del tasks_follow_, len_of_str, mean_of_strct_lens
+    print ("number of 'follow' sentences", len(tasks_follow))
+
+print('-----------------------------------------------------')
+#----------------------------------------------------------------------------------------------
+print('resampling and appending all the task sentences into one list')
+tasks = []
+if len(tasks_go)>1:
+    # resample
+    try: tasks_go = resample(tasks_go, replace=False, n_samples=n_samples_per_intent, random_state=random_state)
+    except ValueError: tasks_go = resample(tasks_go, replace=True, n_samples=n_samples_per_intent, random_state=random_state)
+    # append to main list
+    for i in range(n_samples_per_intent): tasks.append(tasks_go[i])
+    # rm temp params
+    del tasks_go
+if len(tasks_take)>1:
+    # resample
+    try: tasks_take = resample(tasks_take, replace=False, n_samples=n_samples_per_intent, random_state=random_state)
+    except ValueError: tasks_take = resample(tasks_take, replace=True, n_samples=n_samples_per_intent, random_state=random_state)
+    # append to main list
+    for i in range(n_samples_per_intent): tasks.append(tasks_take[i])
+    # rm temp params
+    del tasks_take
+if len(tasks_find)>1:
+    # resample
+    try: tasks_find = resample(tasks_find, replace=False, n_samples=n_samples_per_intent, random_state=random_state)
+    except ValueError: tasks_find = resample(tasks_find, replace=True, n_samples=n_samples_per_intent, random_state=random_state)
+    # append to main list
+    for i in range(n_samples_per_intent): tasks.append(tasks_find[i])
+    # rm temp params
+    del tasks_find
+if len(tasks_answer)>1:
+    # resample
+    try: tasks_answer = resample(tasks_answer, replace=False, n_samples=n_samples_per_intent, random_state=random_state)
+    except ValueError: tasks_answer = resample(tasks_answer, replace=True, n_samples=n_samples_per_intent, random_state=random_state)
+    # append to main list
+    for i in range(n_samples_per_intent): tasks.append(tasks_answer[i])
+    # rm temp params
+    del tasks_answer
+if len(tasks_tell)>1:
+    # resample
+    try: tasks_tell = resample(tas
