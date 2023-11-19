@@ -66,3 +66,80 @@ class slot_training_class():
     def import_data(self, debug=False):
         '''
         method for importing and processing input data
+        '''
+        # Importing pickled wordvectors, dictionary, inputs and labels
+        with open(self.base_path + '/wordvectors', 'rb') as vectors_file:
+            print("Importing wordvectors...", end=' ', flush=True)
+            word_vectors = msgpack_numpy.load(vectors_file)
+            print("Done")
+        with open(self.base_path + '/dictionary', 'rb') as dict_file:
+            print("Importing dictionary...", end=' ', flush=True)
+            dictionary = msgpack.load(dict_file, raw=False)
+            print("Done")
+        with open('inputs_slot_filling', 'rb') as data_inputs_file:
+            print("Importing inputs...", end=' ', flush=True)
+            sentences = msgpack.load(data_inputs_file, raw=False)
+            print("Done")
+        with open('outputs_slot_filling', 'rb') as data_outputs_file:
+            print("Importing labels...", end=' ', flush=True)
+            outputs = msgpack.load(data_outputs_file, raw=False)
+            print("Done")
+
+
+        ########################################################################################################################
+        # Processing inputs
+        ########################################################################################################################
+        print("Modifying input sentences...")
+
+        # importing progressbar
+        bar = progressbar.ProgressBar(max_value=len(sentences), redirect_stdout=True, end=' ')
+        # preassigning the inputs variable for faster processing
+        data_inputs = np.zeros((len(sentences), self.n_steps), dtype=np.int32)
+        # initiating all the inputs to index of zero vector (zerowordvec_idx = dictionary['zerowordvec'])
+        zerowordvec_idx = dictionary['zerowordvec']
+        data_inputs[:, :] = zerowordvec_idx
+        # Processing inputs
+        lengths = np.zeros(len(sentences), dtype=np.int32)
+        i = 0
+        words_not_found_in_dic = []
+        for line in sentences:
+            # Initializing an empty list of Indexes
+            h = []
+            # Iterating each word in the line over the dictionary and appending the indexes to a list
+            for k in range(len(line)):
+                try:
+                    idx = dictionary[line[k]]
+                except:
+                    idx = zerowordvec_idx
+                    words_not_found_in_dic.append(line[k])
+                # Appending the index(idx) of each word to the list h.
+                h.append(idx)
+            # appending the length of each line to the list lengths
+            lengths[i] = len(line)
+            # modify contents of the array
+            data_inputs[i, :len(h)] = h
+            # bar update
+            bar.update(i)
+            i = i + 1
+        # bar finish
+        bar.finish()
+        # if words are not found in dictionary
+        if len(words_not_found_in_dic)!=0:
+            # rm duplicates
+            words_not_found_in_dic = list(set(words_not_found_in_dic))
+            # use this file to update most_common_words and to generate a new dictionary and wordvector
+            with open('words_not_found_in_dic.txt','w') as f:
+                for item in words_not_found_in_dic: f.write(item + '\n')
+            print(colored('\nNo. of words not found in the dict = {}, pls. check words_not_found_in_dic file\n'.format(len(words_not_found_in_dic)),'red'), end='', flush=True)
+        # if debug print input sample to check if the input pipeline is correct
+        if debug:
+            print('Sample input data')
+            print('=========================================================')
+            print('input sentences are {}'.format(sentences[0:2]))
+            print('[Vector]input sentence are {}'.format(data_inputs[0:2]))
+            print('=========================================================')
+
+        ########################################################################################################################
+        # Processing labels
+        ########################################################################################################################
+        print("Modifying outp
