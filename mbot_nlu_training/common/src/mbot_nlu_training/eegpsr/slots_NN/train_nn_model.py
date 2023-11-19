@@ -142,4 +142,86 @@ class slot_training_class():
         ########################################################################################################################
         # Processing labels
         ########################################################################################################################
-        print("Modifying outp
+        print("Modifying outputs...")
+
+        # Pre assigning the data_outputs array
+        data_outputs = np.zeros((self.n_examples, self.n_steps, len(self.available_slots)), dtype=np.int32)
+        # Initiating all the one hot vectors to the default vector corresponding to the 'Outside' slot
+        # Outside string 'O' is part of the naming convention (Begin, Inside and Outside)for classification of words (Object, Source etc) in a sentence.
+        # Ref: $ROS_WORKSPACE/mbot_natural_language_processing/mbot_nlu/ros/doc/pedro_thesis.pdf
+        idx_outside = self.available_slots.index('O')
+        data_outputs[:, :, idx_outside] = 1
+        # Initiating progress bar
+        bar = progressbar.ProgressBar(max_value=len(outputs), redirect_stdout=True, end=' ')
+        # Index for line wise iteration
+        v = 0
+        # Process outputs
+        for line in outputs:
+            # Index for word wise iteration
+            w = 0
+            for output in line:
+                # find slot if it exists in available slots list
+                try:
+                    idx_found = self.available_slots.index(output)
+                    # print('index found is ' + str(idx_found))
+                except ValueError:
+                    raise Exception('Could not find this output = {}  in this sentence = {} in the available list of slots'.format(output, sentences[outputs.index(line)]))
+                # modify array
+                data_outputs[v][w][idx_outside] = 0
+                data_outputs[v][w][idx_found] = 1
+                w = w + 1
+            # Incrementing line index
+            v = v + 1
+            # Progress bar update
+            bar.update(v)
+        # Progress bar finished
+        bar.finish()
+
+        # debug prining
+        if debug==True:
+            print('Sample output data')
+            print('=========================================================')
+            print('output labels are {}'.format(outputs[0:2]))
+            print('[Vector]output labels are {}'.format(outputs_train[0:2]))
+            print('=========================================================')
+
+        return word_vectors, data_inputs, data_outputs, lengths
+
+
+    def shuffle_n_batch(self, data_inputs, data_outputs, lengths):
+        '''
+        shuffles and splits the data inputs for each epoch. 8 batches are used for training and 1 batch is used for validation
+        '''
+        split_list_inputs = []
+        split_list_outputs = []
+        split_list_lengths = []
+        # resamplining data
+        data_inputs, data_outputs, lengths = resample(data_inputs, data_outputs, lengths, replace=self.resample_replace)
+        # splitting to batches
+        len_each_chunks = int(len(data_inputs)/self.number_of_batches)
+        for i in range(self.number_of_batches):
+            split_list_inputs.append(np.array(data_inputs[len_each_chunks*(i):len_each_chunks*(i+1)]))
+            split_list_outputs.append(np.array(data_outputs[len_each_chunks*(i):len_each_chunks*(i+1)]))
+            split_list_lengths.append(np.array(lengths[len_each_chunks*(i):len_each_chunks*(i+1)]))
+
+        return split_list_inputs, split_list_outputs, split_list_lengths
+
+
+    def recurrent_neural_network(self, rnn_inputs, sequence_lengths):
+        '''
+        defining nn layers (graph in TF terms)
+        '''
+        # def of 1 layer of lstm
+        def cell(): return tf.nn.rnn_cell.BasicLSTMCell(self.rnn_size, forget_bias=self.forget_bias)
+        # initializing weights and biases for the output layer
+        num_layers = self.n_lstm_layers
+        layer = {'weights': tf.Variable(tf.random_normal(shape=[self.batch_size, 2*self.rnn_size, self.n_classes]), name='WEIGHTS'),
+                 'biases': tf.Variable(tf.random_normal(shape=[self.n_classes]), name='BIASES')}
+
+        # histograms for TB
+        if self.use_tensorboard:
+            tf.summary.histogram('weights', layer['weights'])
+            tf.summary.histogram('biases', layer['biases'])
+
+        # n layer of lstm with rnn_size number of cells for both forward and backward hidden layers.
+        with tf.device('/GPU
