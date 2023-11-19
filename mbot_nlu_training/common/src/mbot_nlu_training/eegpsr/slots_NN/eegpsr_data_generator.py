@@ -604,4 +604,98 @@ if len(tasks_answer)>1:
     del tasks_answer
 if len(tasks_tell)>1:
     # resample
-    try: tasks_tell = resample(tas
+    try: tasks_tell = resample(tasks_tell, replace=False, n_samples=n_samples_per_intent, random_state=random_state)
+    except ValueError: tasks_tell = resample(tasks_tell, replace=True, n_samples=n_samples_per_intent, random_state=random_state)
+    # append to main list
+    for i in range(n_samples_per_intent): tasks.append(tasks_tell[i])
+    # rm temp params
+    del tasks_tell
+if len(tasks_meet)>1:
+    # resample
+    try: tasks_meet = resample(tasks_meet, replace=False, n_samples=n_samples_per_intent, random_state=random_state)
+    except ValueError: tasks_meet = resample(tasks_meet, replace=True, n_samples=n_samples_per_intent, random_state=random_state)
+    # append to main list
+    for i in range(n_samples_per_intent): tasks.append(tasks_meet[i])
+    # rm temp params
+    del tasks_meet
+if len(tasks_follow)>1:
+    # resample
+    try: tasks_follow = resample(tasks_follow, replace=False, n_samples=n_samples_per_intent, random_state=random_state)
+    except ValueError: tasks_follow = resample(tasks_follow, replace=True, n_samples=n_samples_per_intent, random_state=random_state)
+    # append to main list
+    for i in range(n_samples_per_intent): tasks.append(tasks_follow[i])
+    # rm temp params
+    del tasks_follow
+if len(tasks_guide)>1:
+    # resample
+    try: tasks_guide = resample(tasks_guide, replace=False, n_samples=n_samples_per_intent, random_state=random_state)
+    except ValueError: tasks_guide = resample(tasks_guide, replace=True, n_samples=n_samples_per_intent, random_state=random_state)
+    # append to main list
+    for i in range(n_samples_per_intent): tasks.append(tasks_guide[i])
+    # rm temp params
+    del tasks_guide
+
+print('-----------------------------------------------------')
+
+# Appending introductions (eg: "hello robot" , "could you please" etc.) and generating inputs and outputs
+c = 0
+sentences = []
+outputs = []
+for v in range(len(tasks)):
+
+    try:
+        task = tasks[v].split(' ')
+    except:
+        print('error at {}, check if the items in tasks are strings tasks[v] = {}'.format(v, tasks[v]))
+        break
+
+    intro = intros[c].split(' ')
+
+    sentence = []
+    output = []
+    # appending intro if the total length is less than or equal to 15 (ref: Pedro master thesis)
+    task_with_intro = []
+    if v%4 == 0 and (len(intro) + len(task)) <= 15:
+        for x in intro:
+            task_with_intro.append(x)
+        c = c + 1
+
+    # reinitiating intros
+    if c == len(intros):
+       c = 0
+
+    # appending task
+    for x in task:
+        task_with_intro.append(x)
+
+    # appending the task with introduction to the sentence list
+    for h in range(len(task_with_intro)):
+        if not task_with_intro[h].startswith('-'):
+            sentence.append(task_with_intro[h])
+            # appending outputs according to the input
+            if h < len(task_with_intro)-1:
+                if task_with_intro[h+1].startswith('-'):
+                    l = task_with_intro[h+1]
+                    l = l.replace('-', '')
+                    output.append(l)
+                else:
+                    output.append('O')
+            else:
+                output.append('O')
+    # split sentences and tags
+    sentences.append(sentence)
+    outputs.append(output)
+
+# pickling inputs and labels
+with open('inputs_slot_filling', 'wb') as inputs_file:
+    msgpack.dump(sentences, inputs_file)
+
+with open('outputs_slot_filling', 'wb') as outputs_file:
+    msgpack.dump(outputs, outputs_file)
+
+print('Total number of inputs', len(sentences))
+print('Total number of outputs', len(outputs))
+
+print('-----------------------------------------------------')
+
+print('Data generation is complete for Slots training, you may start the training by running training_nn_model.py script')
