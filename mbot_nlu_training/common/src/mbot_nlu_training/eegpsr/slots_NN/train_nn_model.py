@@ -224,4 +224,68 @@ class slot_training_class():
             tf.summary.histogram('biases', layer['biases'])
 
         # n layer of lstm with rnn_size number of cells for both forward and backward hidden layers.
-        with tf.device('/GPU
+        with tf.device('/GPU:0'):
+            fw_cell = tf.nn.rnn_cell.MultiRNNCell([cell() for num in range(num_layers)], state_is_tuple=True)
+            bw_cell = tf.nn.rnn_cell.MultiRNNCell([cell() for num in range(num_layers)], state_is_tuple=True)
+
+        # building the graph while running the session (tf methods which reduces the load on the pc)
+        (outputs_fw, outputs_bw), _ = tf.nn.bidirectional_dynamic_rnn(
+            cell_fw=fw_cell,
+            cell_bw=bw_cell,
+            inputs=rnn_inputs,
+            sequence_length=sequence_lengths,
+            parallel_iterations=self.n_parallel_iterations_bi_rnn,
+            dtype=tf.float32,
+            scope='BI_DIRECTIONAL_DYNAMIC_RNN')
+
+        # output layer modifications
+        with tf.device('/GPU:0'):
+            outputs = tf.concat((outputs_fw, outputs_bw), 2)
+            output = tf.matmul(outputs, layer['weights']) + layer['biases']
+            if self.train_method=='new': prediction = tf.reshape(output, [self.batch_size, self.n_steps, self.n_classes])
+            if self.train_method=='old': prediction = tf.reshape(output, [self.n_steps, self.n_classes])
+            if self.debug:
+                print('RNN properties')
+                print('=========================================================')
+                print('fw shape = ', outputs_fw.get_shape().as_list())
+                print('bw shape = ', outputs_bw.get_shape().as_list())
+                print('concat shape = ', outputs.get_shape().as_list())
+                print('weights shape = ', layer['weights'].get_shape().as_list())
+                print('biases shape = ', layer['biases'].get_shape().as_list())
+                print('=========================================================')
+
+        return prediction
+
+
+    def train_neural_network(self):
+
+        # importing data
+        word_vectors, data_inputs, data_outputs, lengths = self.import_data(debug=False)
+
+        ########################################################################################################################
+        # TF Data implementation (experimental)
+        ########################################################################################################################
+        # creating dataset (train and test) from input and label arrays
+        if self.train_method=='new':
+            print('Creating tf datasets...', end=' ', flush=True)
+            # train data
+            dataset_train = tf.data.Dataset.from_tensor_slices({'inputs': inputs_train, 'labels': outputs_train, 'inputs_length': lengths_train})
+            shuffled_dataset_train = dataset_train.apply(tf.contrib.data.shuffle_and_repeat(buffer_size=self.shuffle_buffer, count=self.repeat_dataset, seed=self.shuffle_buffer))
+            batched_dataset_train = shuffled_dataset_train.batch(self.batch_size).prefetch(buffer_size=self.prefetch_buffer)
+            # test data
+            dataset_test = tf.data.Dataset.from_tensor_slices({'inputs': inputs_test, 'labels': outputs_test, 'inputs_length': lengths_test})
+            batched_dataset_test = dataset_test.batch(self.batch_size).prefetch(buffer_size=self.prefetch_buffer)
+            # pointers to initiate train and validation set
+            iterator = tf.data.Iterator.from_structure(batched_dataset_train.output_types, batched_dataset_train.output_shapes)
+            # batched_dataset_train = batched_dataset_train.apply(tf.contrib.data.prefetch_to_device('/GPU:0'))
+            # op to select train and test data
+            training_init_op = iterator.make_initializer(batched_dataset_train)
+            validation_init_op = iterator.make_initializer(batched_dataset_test)
+            combined_input = iterator.get_next(name='combined_input')
+            print('Done')
+
+        ########################################################
+        # TF placeholder implementation (old method)
+        ########################################################
+        if self.train_method=='old':
+            input_placeholder = tf.placeholder(dtype=tf.int32, shape=[self.batch_size, self.n_st
