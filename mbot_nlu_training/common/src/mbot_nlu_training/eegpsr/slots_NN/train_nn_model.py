@@ -288,4 +288,83 @@ class slot_training_class():
         # TF placeholder implementation (old method)
         ########################################################
         if self.train_method=='old':
-            input_placeholder = tf.placeholder(dtype=tf.int32, shape=[self.batch_size, self.n_st
+            input_placeholder = tf.placeholder(dtype=tf.int32, shape=[self.batch_size, self.n_steps], name='input_placeholder')
+            labels_placeholder = tf.placeholder(dtype=tf.int32, shape=[self.batch_size*self.n_steps, self.n_classes], name='labels_placeholder')
+            sequence_length_placeholder = tf.placeholder(dtype=tf.int32, shape=(None), name='inputs_length')
+
+        # selecting inputs if method is old else new
+        if self.train_method=='old':
+            input_indexes = input_placeholder
+            labels = labels_placeholder
+            sequence_lengths = sequence_length_placeholder
+        else:
+            input_indexes = combined_input['inputs']
+            labels = combined_input['labels']
+            sequence_lengths = combined_input['inputs_length']
+
+        ##########################################################
+        # Trying to get the batch size from input so that we can use it in the input as a symbolic tensor
+        ##########################################################
+        # self.dim_batch = tf.shape(rnn_inputs)[0]
+
+        # look up for embeds/wordvectors (words_index to 300 len vector)
+        print('Embedding wordvectors...', end=' ', flush=True)
+        embeds = tf.convert_to_tensor(word_vectors, name="embeds")
+        print('Done')
+
+        # output of the TF graph
+        rnn_inputs = tf.nn.embedding_lookup(embeds, input_indexes)
+        prediction = self.recurrent_neural_network(rnn_inputs, sequence_lengths)
+
+        # defining cost
+        with tf.name_scope('COST'):
+            cost = tf.reduce_mean(tf.losses.sigmoid_cross_entropy(logits = prediction, multi_class_labels = labels_placeholder))
+            tf.summary.scalar('cross_entropy/loss', cost)
+        # defining optimizer
+        with tf.name_scope('TRAIN'):
+            optimizer = tf.train.AdamOptimizer(self.learning_rate).minimize(cost)
+
+        # Defining the accuracy of the model
+        with tf.name_scope('ACCURACY'):
+            correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(labels, 1))
+            accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
+            tf.summary.scalar('train dataset accuracy', accuracy)
+
+        # classifier saver def
+        saver = tf.train.Saver()
+
+        ########################################################################################################################
+        # TB Implementation (experimental)
+        ########################################################################################################################
+        # tf summary for TB
+        # tf.summary.text('input_text_and_labels', combined_input['inputs'])
+        if self.use_tensorboard:
+            merged_summary = tf.summary.merge_all()
+            writer = tf.summary.FileWriter('./tf_log/validation_accuracy')
+
+        # configuring session parameters to use only required amount of memory
+        config = tf.ConfigProto()
+        config.gpu_options.allow_growth = True
+
+        print("\nStarting training...\n")
+        with tf.Session(config=config) as sess:
+            # adding graph to the writer
+            if self.use_tensorboard: writer.add_graph(sess.graph)
+            print('Initiating global variables...', end=' ', flush=True)
+            sess.run(tf.global_variables_initializer())
+            print('Done')
+
+            ########################################################################################################################
+            # NN Training
+            ########################################################################################################################
+            cost_value = 0
+            for epoch in range(self.n_epochs):
+                epoch_loss = 0
+                # choosing steps based on old and new method
+                if self.train_method=='old':
+                    n_training_batches = self.number_of_batches-self.number_of_validation_batches#self.n_inputs_per_epoch
+                else:
+                    n_training_batches = self.steps
+
+                # initializing training dataset
+                if self.train_method
