@@ -367,4 +367,48 @@ class slot_training_class():
                     n_training_batches = self.steps
 
                 # initializing training dataset
-                if self.train_method
+                if self.train_method=='new':
+                    sess.run(training_init_op)
+                else:
+                    if epoch==0:
+                        # first epoch shuffle and split into training and validation sets, training data shuffle only then onwards
+                        # shuffling and generating training and validation batches every epoch
+                        print('Splitting data inputs to batches of {} ({} for training {} for validation)...'.format(self.number_of_batches, n_training_batches, self.number_of_validation_batches ), end=' ', flush=True)
+                        [split_list_inputs, split_list_outputs, split_list_lengths] = self.shuffle_n_batch(data_inputs, data_outputs, lengths)
+                        print('Done')
+                    else:
+                        # shuffling only training batch
+                        split_list_inputs[:n_training_batches], split_list_outputs[:n_training_batches], split_list_lengths[:n_training_batches] = resample(split_list_inputs[:n_training_batches], split_list_outputs[:n_training_batches], split_list_lengths[:n_training_batches], replace=False)
+
+                # Starting training
+                for training_batch_idx in range(0, n_training_batches):
+                    if self.train_method=='old':
+                        print('Processed batches = {}/{}'.format(training_batch_idx + 1, n_training_batches))
+                        range_each_chuntraining_batch_idxs = len(split_list_inputs[training_batch_idx]) - self.batch_size
+                        # progressbar
+                        bar = progressbar.ProgressBar(max_value=range_each_chuntraining_batch_idxs, redirect_stdout=True, end=' ', flush=True)
+                        # iterating over batches
+                        for training_data_point_idx in range(range_each_chuntraining_batch_idxs):
+                            epoch_x = np.array(split_list_inputs[training_batch_idx][training_data_point_idx: training_data_point_idx + self.batch_size])
+                            epoch_y = np.array(split_list_outputs[training_batch_idx][training_data_point_idx])
+                            inputs_length = np.array(split_list_lengths[training_batch_idx][training_data_point_idx: training_data_point_idx + self.batch_size])
+                            # running optimizer and cost nodes
+                            _, cost_value = sess.run([optimizer, cost], feed_dict={input_placeholder: epoch_x, labels_placeholder: epoch_y, sequence_length_placeholder: inputs_length})
+                            # cumulative epoch_loss
+                            epoch_loss+=cost_value
+                            # printing input shapes for debug
+                            if self.debug==True: print('shape of input, labels and lengths = {}, {}, {}'.format(epoch_x.shape, epoch_y.shape, inputs_length.shape))
+                            bar.update(training_data_point_idx)
+
+                            ########################################################################################################################
+                            # TB Implementation (method=old)
+                            ########################################################################################################################
+                            if training_data_point_idx%5==0 and self.use_tensorboard:
+                                summary_iter = sess.run(merged_summary, feed_dict={input_placeholder: epoch_x, labels_placeholder: epoch_y, sequence_length_placeholder: inputs_length})
+                                writer.add_summary(summary_iter, training_data_point_idx)
+                        bar.finish()
+                    else:
+                        ########################################################################################################################
+                        # TB Implementation (method=new)
+                        ########################################################################################################################
+                        if k%5==0 and self.use_ten
