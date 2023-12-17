@@ -411,4 +411,70 @@ class slot_training_class():
                         ########################################################################################################################
                         # TB Implementation (method=new)
                         ########################################################################################################################
-                        if k%5==0 and self.use_ten
+                        if k%5==0 and self.use_tensorboard:
+                            summary_iter = sess.run(merged_summary)
+                            writer.add_summary(summary_iter, k)
+                        # running optimizer and cost nodes
+                        _, cost_value = sess.run([optimizer, cost])
+                        # printing input shapes for debug
+                        if self.debug==True: print('shape of input, labels and lengths = {}, {}, {}'.format(input_indexes.get_shape().as_list(), labels.get_shape().as_list(), sequence_lengths.get_shape().as_list()))
+                        # cumulative epoch_loss
+                        epoch_loss+=cost_value
+
+                print('Epoch', epoch, 'completed out of',self.n_epochs,'loss:',epoch_loss)
+                ########################################################################################################################
+                # NN Validation
+                ########################################################################################################################
+                # printing loss for every 5th batch or final batch
+                p_accuracy = 0
+                print('Calculating accuracy of the classifier based on validation data...', end=' ', flush=True)
+                if self.train_method=='old':
+                    for chunk in range(self.number_of_validation_batches):
+                        for v in range(len(split_list_inputs[n_training_batches + chunk])-self.batch_size):
+                            p_accuracy += accuracy.eval({input_placeholder:split_list_inputs[n_training_batches + chunk][v: v + self.batch_size],
+                                                        labels_placeholder:split_list_outputs[n_training_batches + chunk][v],
+                                                        sequence_length_placeholder:split_list_lengths[n_training_batches + chunk][v: v + self.batch_size]})
+
+                    accuracy_val = p_accuracy/(int(len(split_list_inputs[0])-self.batch_size)*self.number_of_validation_batches)
+                    n_training_batches += 1
+                else:
+                    sess.run(validation_init_op)
+                    for v in range(int(int(self.q*self.n_examples)/(self.batch_size))):
+                        p_accuracy += accuracy.eval()
+                    accuracy_val = p_accuracy/int(int(self.q*self.n_examples)/(self.batch_size))
+                print('Done')
+                # adding validation accuracy to TB
+                with tf.name_scope('ACCURACY'):
+                    tf.summary.scalar('validation dataset accuracy', p_accuracy)
+                print('Accuracy of validation data = {}%'.format((accuracy_val)*100))
+
+                # Generating the directory for saving the classifier after training if it doesn't exist
+                if not os.path.exists('latest_slots_classifier'):
+                    os.makedirs('latest_slots_classifier')
+
+                # Saving the current session in seperate folders
+                saver.save(sess, './latest_slots_classifier/slots_2.ckpt')
+
+                # Exit the training once the loss reaches near zero
+                if epoch_loss<=self.loss_lower_limit:
+                    print('The loss has reached the minimum value, terminating the training to save the most recent classifier.')
+                    print(" --- Total time consumed to train the network = %s seconds ---" % (time.time() - start_time))
+                    break
+        return
+
+if __name__ == "__main__":
+
+    # Some OS environment variables to set for tensorflow
+    # set TF log level
+    os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+
+    # load training and validation parameters from yaml file
+    yaml_dict = yaml.load(open('../../../../../ros/config/config_mbot_nlu_training.yaml'))['slots_train']
+
+    # set GPU
+    if os.environ.get('CUDA_VISIBLE_DEVICES') is None:
+        gpu_to_use = yaml_dict['available_gpu_index']
+        print("CUDA_VISIBLE_DEVICES environment variable is not set, will try to set to use only GPU {} but may not work".format(gpu_to_use))
+        os.environ['CUDA_VISIBLE_DEVICES'] = gpu_to_use
+
+    # initiate training
