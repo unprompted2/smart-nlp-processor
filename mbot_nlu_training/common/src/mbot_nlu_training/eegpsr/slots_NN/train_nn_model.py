@@ -478,3 +478,5 @@ if __name__ == "__main__":
         os.environ['CUDA_VISIBLE_DEVICES'] = gpu_to_use
 
     # initiate training
+    class_object = slot_training_class(yaml_dict)
+    class_object.train_neural_network()
