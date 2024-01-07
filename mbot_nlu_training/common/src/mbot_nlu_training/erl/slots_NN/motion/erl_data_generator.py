@@ -105,4 +105,193 @@ for l in range(1):
 
 		tasks_motion.append(task)
 
-		task = 'move to -Bpath- the -Ipath- r
+		task = 'move to -Bpath- the -Ipath- rigth -Ipath-'
+
+		tasks_motion.append(task)
+
+		task = 'go trough -Bpath- the -Ipath- door -Ipath-'
+
+		tasks_motion.append(task)
+
+		task = 'move trough -Bpath- the -Ipath- door -Ipath-'
+
+		tasks_motion.append(task)
+
+	for location in locations:
+
+		location = location.replace('location', 'path')
+
+		task = 'go along -Bpath- the -Ipath- location'
+
+		tasks_motion.append(task)
+
+		task = 'move along -Bpath- the -Ipath- location'
+
+		tasks_motion.append(task)
+
+		location = location.replace('path', 'goal')
+
+		task = 'go'
+
+		tasks_motion.append(task)
+
+		task = 'move'
+
+		tasks_motion.append(task)
+
+		task = 'go next -Bgoal to -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'move next -Bgoal to -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'go in -Bgoal front -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'move in -Bgoal front -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'go to -Bgoal the -Igoal- rigth -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'move to -Bgoal the -Igoal- rigth -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'drive to -Bgoal the -Igoal- rigth -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'reach to -Bgoal the -Igoal- rigth -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'go to -Bgoal the -Igoal- left -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'move to -Bgoal the -Igoal- left -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'come to -Bgoal the -Igoal- left -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'reach to -Bgoal the -Igoal- left -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'drive to -Bgoal the -Igoal- left -Igoal- of -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'go close -Bgoal to -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'move close -Bgoal to -Igoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'go near -Bgoal the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'move near -Bgoal the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'go to -Bgoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'move to -Bgoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'walk to -Bgoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'go into -Bgoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'move into -Bgoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+	
+		task = 'walk into -Bgoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'drive into -Bgoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'drive to -Bgoal- the -Igoal- ' + location
+
+		tasks_motion.append(task)
+
+		task = 'reach the -Bgoal- ' + location
+
+		tasks_motion.append(task)
+
+
+sentences = []
+outputs = []
+
+for i in range(20000):
+
+	task = tasks_motion[i]
+
+	tasks.append(task)
+
+random.shuffle(tasks)
+
+
+c = 0
+for v in range(20000):	
+
+	task = tasks[v].split(' ')
+
+	sentence = []
+	output = []
+
+	task_f = []
+	if v%4 == 0:
+		intro = intros[c].split(' ')
+		for x in intro:
+			task_f.append(x)
+		c+=1
+		if c == len(intros):
+			c = 0 
+	
+	for x in task:
+		task_f.append(x)
+
+	for h in range(len(task_f)):
+		if not task_f[h].startswith('-'):
+			sentence.append(task_f[h])
+			if h < len(task_f)-1:
+				if task_f[h+1].startswith('-'):
+					l = task_f[h+1]
+					l = l.replace('-', '')
+					output.append(l)
+				else:
+					output.append('O')
+			else:
+				output.append('O')
+
+	sentences.append(sentence)
+
+	outputs.append(output)
+
+with open('inputs_slot_filling', 'wb') as inputs_file:
+	pickle.dump(sentenc
