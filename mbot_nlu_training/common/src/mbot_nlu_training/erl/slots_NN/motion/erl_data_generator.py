@@ -294,4 +294,9 @@ for v in range(20000):
 	outputs.append(output)
 
 with open('inputs_slot_filling', 'wb') as inputs_file:
-	pickle.dump(sentenc
+	pickle.dump(sentences, inputs_file)
+
+with open('outputs_slot_filling', 'wb') as outputs_file:
+	pickle.dump(outputs, outputs_file)	
+
+print(len(sentences))
