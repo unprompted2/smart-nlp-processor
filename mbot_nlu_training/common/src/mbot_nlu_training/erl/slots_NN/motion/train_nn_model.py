@@ -102,4 +102,96 @@ def recurrent_neural_network(rnn_size, n_classes, rnn_inputs, n_steps):
 
         outputs = tf.concat((outputs_fw, outputs_bw), 2)
 
-        output = tf.m
+        output = tf.matmul(outputs, layer['weights']) + layer['biases']
+
+        prediction = tf.reshape(output, [n_steps, n_classes])
+
+    return prediction
+
+
+
+def train_neural_network(prediction, n_examples, batch_size, inputs_train, inputs_test, outputs_train, outputs_test,
+                        lengths_train, lengths_test, word_vectors, n_epochs, learning_rate, q):
+    
+
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = prediction, labels = y))
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
+        sess.run(embeds.assign(word_vectors))
+
+        for epoch in range(n_epochs):
+            epoch_loss = 0
+
+            for k in range(0, int((1-q)*n_examples)-1):
+                c = 0
+
+                epoch_x = np.array(inputs_train[k*batch_size: (k+1)*batch_size])
+
+                epoch_y = np.array(outputs_train[k])
+
+                inputs_length = np.array(lengths_train[k*batch_size: (k+1)*batch_size])
+                
+                _, c = sess.run([optimizer, cost], feed_dict={x: epoch_x, y: epoch_y, sequence_length: inputs_length})
+                
+                epoch_loss += c
+
+                if k%1000 == 0:
+                    print(k)
+
+            print('Epoch', epoch, 'completed out of',n_epochs,'loss:',epoch_loss)
+
+            correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
+
+            accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
+
+            #print('Accuracy:',accuracy.eval({x:inputs_train[: batch_size], y:outputs_train[: batch_size], 
+            #                                    sequence_length:lengths_train[:batch_size]}))
+            #print('Accuracy:',accuracy.eval({x:inputs_test, y:outputs_test, sequence_length:lengths_test}))
+
+            p_accuracy = 0
+      #      y_true = []
+       #     y_pred = []
+
+            for v in range(int(q*n_examples)):
+
+                p_accuracy += accuracy.eval({x:inputs_test[v*batch_size: (v+1)*batch_size], y:outputs_test[v],
+                                             sequence_length:lengths_test[v*batch_size: (v+1)*batch_size]})
+
+           # for v in range(int(0.001*n_examples)):
+
+#                y_true.append(np.argmax(y.eval({x:inputs_test[v*batch_size: (v+1)*batch_size], y:outputs_test[v],
+ #                                            sequence_length:lengths_test[v*batch_size: (v+1)*batch_size]}), 1).tolist())
+  #              y_pred.append(np.argmax(prediction.eval({x:inputs_test[v*batch_size: (v+1)*batch_size],
+   #                                          sequence_length:lengths_test[v*batch_size: (v+1)*batch_size]}), 1).tolist())
+
+            #wtf = np.argmax(prediction.eval({x:np.array([[370, 1, 8355, 7, 1, 46584, 0, 0, 0, 0, 0, 0, 0]]),
+            #    y:np.array([[0,0,0,0,0,0,0,0,0,1], [0,0,0,0,0,0,0,0,0,1], [1,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,1],
+            #     [0,0,0,0,0,0,0,0,0,1], [0,0,0,0,1,0,0,0,0,1], [0,0,0,0,0,0,0,0,0,1], [0,0,0,0,0,0,0,0,0,1],
+            #     [0,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,0,1]]),
+            #                             sequence_length:np.array([6])}), 1).tolist()
+
+            print('Accuracy, test data:', p_accuracy/(q*n_examples))
+
+    #        print(y_true)
+
+     #       print(y_pred)
+
+            #print('wtf', wtf)
+            saver.save(sess, 'slots_rockin_motion.ckpt')
+
+    return
+
+
+[vocab_size, n_examples, inputs_train, inputs_test, outputs_train,
+                     outputs_test, lengths_train, lengths_test, word_vectors] = import_data(n_examples, n_steps)
+
+
+x = tf.placeholder(tf.int32, [batch_size, n_steps], name='input_placeholder')
+y = tf.placeholder(tf.int32, [batch_size*n_steps, n_classes], name='labels_placeholder')
+
+embeds = tf.Variable(tf.random_uniform([vocab_size, embedding_size], -1.0, 1.0), trainable = False, name="embeds")
+
+sequence_length = tf.placeholder(shape=(None), dtype=tf.int32, name='i
