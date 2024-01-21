@@ -194,4 +194,13 @@ y = tf.placeholder(tf.int32, [batch_size*n_steps, n_classes], name='labels_place
 
 embeds = tf.Variable(tf.random_uniform([vocab_size, embedding_size], -1.0, 1.0), trainable = False, name="embeds")
 
-sequence_length = tf.placeholder(shape=(None), dtype=tf.int32, name='i
+sequence_length = tf.placeholder(shape=(None), dtype=tf.int32, name='inputs_length')
+
+rnn_inputs = tf.nn.embedding_lookup(embeds, x)  
+
+prediction = recurrent_neural_network(rnn_size, n_classes, rnn_inputs, n_steps)
+
+saver = tf.train.Saver()
+
+train_neural_network(prediction, n_examples, batch_size, inputs_train, inputs_test, outputs_train, outputs_test,
+                     lengths_train, lengths_test, word_vectors, n_epochs, learning_rate, q)
