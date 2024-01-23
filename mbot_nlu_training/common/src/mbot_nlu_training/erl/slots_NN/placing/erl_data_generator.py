@@ -58,3 +58,212 @@ for objet in objects_a:
 	tasks_placing.append(task)
 
 	task = 'put it -Btheme- '
+
+	tasks_placing.append(task)
+
+	task = 'let go of it -Btheme- '
+
+	tasks_placing.append(task)
+
+	for location in locations:
+
+		location = location.replace('location', 'goal')
+
+		task = 'place a ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put a ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'place them -Btheme- in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put them -Btheme- in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'place it -Btheme- in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put it -Btheme- in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'place a ' + objet + ' on the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put a ' + objet + ' on the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'place a ' + objet + ' at the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put a ' + objet + ' at the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'let go of a ' + objet + ' at the ' + location
+
+		tasks_placing.append(task)
+
+for objet in objects_a:
+
+	task = 'place the ' + objet
+
+	tasks_placing.append(task)
+
+	task = 'place them -Btheme- '
+
+	tasks_placing.append(task)
+
+	task = 'put it -Btheme- '
+
+	tasks_placing.append(task)
+
+	task = 'let go of it -Btheme- '
+
+	tasks_placing.append(task)
+
+	for location in locations:
+
+		location = location.replace('location', 'goal')
+
+		task = 'place the ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put the ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'place them -Btheme- in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put them -Btheme- in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'place it -Btheme- in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put it -Btheme- in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'place the ' + objet + ' on the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put the ' + objet + ' on the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'let go of the ' + objet + ' on the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'place the ' + objet + ' at the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'let go of the ' + objet + ' at the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put a ' + objet + ' at the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'let go of a ' + objet + ' at the ' + location
+
+		tasks_placing.append(task)
+
+
+for objet in objects_a_can_of:
+
+	task = 'place a mug of ' + objet
+
+	tasks_placing.append(task)
+
+	for location in locations:
+
+		location = location.replace('location', 'goal')
+
+		task = 'place a mug of ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put a mug of ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'let go of a mug of ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+for objet in objects_a_glass_of:
+
+	task = 'place a glass of ' + objet
+
+	tasks_placing.append(task)
+
+	for location in locations:
+
+		location = location.replace('location', 'goal')
+
+		task = 'place a glass of ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put a glass of ' + objet + ' in the' + location
+
+		tasks_placing.append(task)
+
+		task = 'let go of a glass of ' + objet + ' in the' + location
+
+		tasks_placing.append(task)
+
+for objet in objects_a_bottle_of:
+
+	task = 'place a bottle of ' + objet
+
+	tasks_placing.append(task)
+
+	for location in locations:
+
+		location = location.replace('location', 'goal')
+
+		task = 'place a bottle of ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put a bottle of ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+for objet in objects_a_piece_of:
+
+	task = 'place a piece of ' + objet
+
+	tasks_placing.append(task)
+
+	for location in locations:
+
+		location = location.replace('location', 'goal')
+
+		task = 'place a piece of ' + objet + ' in the ' + location
+
+		tasks_placing.append(task)
+
+		task = 'put a piece of ' + objet + ' in the ' + location
+
+		task
