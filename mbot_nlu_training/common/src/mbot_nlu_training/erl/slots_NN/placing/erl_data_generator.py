@@ -266,4 +266,65 @@ for objet in objects_a_piece_of:
 
 		task = 'put a piece of ' + objet + ' in the ' + location
 
-		task
+		tasks_placing.append(task)
+
+
+
+
+sentences = []
+outputs = []
+
+
+for i in range(60000):
+	
+	task = tasks_placing[i]
+
+	tasks.append(task)
+
+random.shuffle(tasks)
+
+
+c = 0
+for v in range(60000):	
+
+	task = tasks[v].split(' ')
+
+	sentence = []
+	output = []
+
+	task_f = []
+	if v%4 == 0:
+		intro = intros[c].split(' ')
+		for x in intro:
+			task_f.append(x)
+		c+=1
+		if c == len(intros):
+			c = 0 
+	
+	for x in task:
+		task_f.append(x)
+
+	for h in range(len(task_f)):
+		if not task_f[h].startswith('-'):
+			sentence.append(task_f[h])
+			if h < len(task_f)-1:
+				if task_f[h+1].startswith('-'):
+					l = task_f[h+1]
+					l = l.replace('-', '')
+					output.append(l)
+				else:
+					output.append('O')
+			else:
+				output.append('O')
+
+	sentences.append(sentence)
+
+	outputs.append(output)
+
+with open('inputs_slot_filling', 'wb') as inputs_file:
+	pickle.dump(sentences, inputs_file)
+
+with open('outputs_slot_filling', 'wb') as outputs_file:
+	pickle.dump(outputs, outputs_file)	
+
+print(len(sentences))
