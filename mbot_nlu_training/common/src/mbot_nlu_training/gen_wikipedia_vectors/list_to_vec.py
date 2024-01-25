@@ -40,4 +40,31 @@ for common_word in common_words_l:
         index = big_dictionary[common_word]
         # from the index we get the correspinding vector
         # generate a subset of big big_dictionary called dictionary
-        # the following line does : d
+        # the following line does : dictionary.append(common_word : i)
+        dictionary[common_word] = i
+        i = i + 1
+        # print progress in percentage (enable only if big file
+        # print str(i) + "/" + str(number_of_loops) + " completed, (" +  str(int(float(i) / float(number_of_loops) * 100.0)) + "% done)"
+        # generate a subset of big_wordvectors called wordvectors
+    except:
+        print('"' + str(common_word) + '" was not found in big dictionary')
+    try:
+        wordvectors.append(list(big_wordvectors[index]))
+    except:
+        print("Word Vector was not found for " + str(common_word))
+
+# adding zerovector to the dictionary and wordvector at the last position
+dictionary['zerowordvec'] = len(dictionary)
+wordvectors.append(list(np.zeros(300)))
+
+print("dumping generated dictionary")
+
+# dump big_dictionary to a serialized file
+with open(sys.argv[1] + '/dictionary', 'wb') as dictionary_handle:
+    msgpack.dump(dictionary, dictionary_handle)
+
+print("dumping generated wordvectors")
+
+# dump big_wordvectors to a serialized file
+with open(sys.argv[1] + '/wordvectors', 'wb') as vector_handle:
+    msgpack.dump(wordvectors, vector_handle, default=msgpack_numpy.encode)

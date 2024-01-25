@@ -1,0 +1,2 @@
+This repository holds the files for general purpose service robot (GPSR). For Function Block Model 3 (FBM3), please refer under ROS package FBM3.
+Note: This repository is now maintained by 'unprompted2'. All future updates and changes will be made by the new owner.
